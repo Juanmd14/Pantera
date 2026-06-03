@@ -1,0 +1,19 @@
+.brandNav,
+.brandFoot {
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  text-transform: uppercase;
+  color: var(--fg);
+  display: inline-block;
+}
+
+.brandNav { font-size: 16px; }
+.brandFoot { font-size: 13px; }
+
+.brandNav b,
+.brandFoot b {
+  color: var(--amber);
+  font-weight: 800;
+}

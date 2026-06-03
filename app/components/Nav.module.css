@@ -1,0 +1,173 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px var(--pad-x);
+  height: var(--nav-h);
+  background: linear-gradient(180deg, rgba(20, 17, 12, 0.85), rgba(20, 17, 12, 0));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.menu {
+  display: flex;
+  gap: 30px;
+}
+
+.menu a {
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: color 200ms ease;
+}
+.menu a:hover { color: var(--fg); }
+.menu a.amber,
+.amber { color: var(--amber); }
+
+.icons {
+  display: flex;
+  gap: 22px;
+  color: var(--fg-dim);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Mobile trigger ─────────────────────────────────────── */
+
+.trigger {
+  display: none;
+  background: transparent;
+  border: 0;
+  color: var(--fg);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+/* ── Overlay ─────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-12px);
+  transition:
+    opacity 320ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 320ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.overlayOpen {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.overlayHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px var(--pad-x);
+  height: var(--nav-h);
+}
+
+.close {
+  background: transparent;
+  border: 0;
+  color: var(--amber);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.overlayList {
+  list-style: none;
+  padding: 0 var(--pad-x);
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.overlayList li {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 360ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 360ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.overlayOpen .overlayList li {
+  opacity: 1;
+  transform: none;
+}
+
+.overlayList a {
+  display: block;
+  font-size: clamp(40px, 11vw, 64px);
+  line-height: 0.92;
+  color: var(--fg);
+  text-decoration: none;
+  padding: 6px 0;
+}
+
+.overlayAmber { color: var(--amber) !important; }
+
+.overlayFoot {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px var(--pad-x) calc(env(safe-area-inset-bottom, 0px) + 24px);
+  border-top: 1px solid var(--line);
+  color: var(--fg-mute);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ── Breakpoints ─────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .menu { gap: 22px; }
+  .menu a { font-size: 12px; }
+  .icons .search { display: none; }
+  .icons { gap: 16px; }
+}
+
+@media (max-width: 767px) {
+  .menu,
+  .icons { display: none; }
+  .trigger { display: inline-block; }
+}
+
+@media (min-width: 768px) {
+  .overlay { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .overlayList li { transition: none; }
+}

@@ -1,0 +1,167 @@
+/* ──────────────────────────────────────────────────────────
+   HOME — hero + campaña + manifiesto (Dirección A)
+   ────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  min-height: 824px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: var(--nav-h) var(--pad-x) 0;
+  overflow: hidden;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 80% at 50% 36%,
+    rgba(233, 170, 30, 0.06),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.kicker {
+  margin-bottom: 42px;
+}
+
+.eyesHero {
+  margin-bottom: 4px;
+}
+
+.wordmark {
+  font-size: clamp(96px, 14vw, 170px);
+  background: linear-gradient(180deg, #fff, #cec7bb 60%, #8b8373);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+  line-height: 0.82;
+}
+
+.tagline {
+  margin-top: 28px;
+  color: var(--fg-dim);
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  font-weight: 300;
+}
+
+.taglineAccent {
+  color: var(--amber);
+}
+
+.scrollCue {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--fg-mute);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+}
+
+/* ── Campaña ────────────────────────────────────────────── */
+
+.campaign {
+  width: 100%;
+}
+
+.campaignImg {
+  position: relative;
+}
+
+.campaignLeft {
+  position: absolute;
+  left: var(--pad-x);
+  bottom: 44px;
+  z-index: 2;
+}
+
+.campaignName {
+  font-size: 48px;
+  margin-top: 12px;
+}
+
+.campaignRight {
+  position: absolute;
+  right: var(--pad-x);
+  bottom: 44px;
+  text-align: right;
+  color: var(--fg-mute);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  line-height: 1.9;
+  z-index: 2;
+}
+
+.priceAmber { color: var(--amber); }
+
+/* ── Manifiesto ─────────────────────────────────────────── */
+
+.manifesto {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  align-items: center;
+  gap: 60px;
+  padding: 120px var(--pad-x);
+  min-height: 362px;
+}
+
+.manifestoText {
+  font-size: 35px;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  text-wrap: balance;
+  margin: 0;
+  font-weight: 300;
+}
+
+.manifestoAccent { color: var(--amber); }
+
+@media (max-width: 900px) {
+  .manifesto {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 72px var(--pad-x);
+  }
+  .manifestoText { font-size: 28px; }
+  .campaignName { font-size: 32px; }
+}
+
+@media (max-width: 767px) {
+  .hero { min-height: 640px; padding-top: calc(var(--nav-h) + 20px); }
+  .kicker { margin-bottom: 28px; font-size: 10px; }
+  .tagline { font-size: 14px; max-width: 28ch; line-height: 1.5; }
+  .scrollCue { font-size: 10px; bottom: 18px; letter-spacing: 0.22em; }
+
+  /* Campaña: imagen más baja, captions stackeadas en bottom-left */
+  .campaignImg { height: 480px !important; }
+  .campaignLeft { bottom: 86px; }
+  .campaignRight {
+    left: var(--pad-x);
+    right: auto;
+    bottom: 24px;
+    text-align: left;
+    line-height: 1.7;
+  }
+  .campaignName { font-size: 28px; }
+
+  .manifesto { padding: 56px var(--pad-x); }
+  .manifestoText { font-size: 24px; }
+}
+
+@media (max-width: 380px) {
+  .campaignImg { height: 420px !important; }
+}

@@ -1,0 +1,113 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import BrandMark from "./BrandMark";
+import styles from "./Nav.module.css";
+
+const LINKS: { href: string; label: string; amber?: boolean }[] = [
+  { href: "/coleccion", label: "Colección" },
+  { href: "/coleccion", label: "Historia" },
+  { href: "/coleccion", label: "Atelier" },
+  { href: "/coleccion", label: "Tienda", amber: true },
+];
+
+export default function Nav() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <nav className={styles.nav}>
+        <Link href="/" className={styles.brandLink} aria-label="Pantera — inicio">
+          <BrandMark size="nav" />
+        </Link>
+
+        <div className={styles.menu}>
+          {LINKS.map((l) => (
+            <Link
+              key={l.label}
+              href={l.href}
+              className={l.amber ? styles.amber : undefined}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
+
+        <div className={styles.icons}>
+          <span className={styles.search}>Buscar</span>
+          <span className={styles.cart}>Bolsa · 0</span>
+        </div>
+
+        <button
+          type="button"
+          className={styles.trigger}
+          aria-label="Abrir menú"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen(true)}
+        >
+          Menú
+        </button>
+      </nav>
+
+      <div
+        id="mobile-menu"
+        className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`}
+        aria-hidden={!open}
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className={styles.overlayHead}>
+          <BrandMark size="nav" />
+          <button
+            type="button"
+            className={styles.close}
+            aria-label="Cerrar menú"
+            onClick={() => setOpen(false)}
+          >
+            Cerrar
+          </button>
+        </div>
+
+        <ul className={styles.overlayList}>
+          {LINKS.map((l, i) => (
+            <li key={l.label} style={{ transitionDelay: `${60 + i * 60}ms` }}>
+              <Link
+                href={l.href}
+                className={`display ${l.amber ? styles.overlayAmber : ""}`}
+              >
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className={styles.overlayFoot}>
+          <span className="mono">Buscar</span>
+          <span className="mono">Bolsa · 0</span>
+        </div>
+      </div>
+    </>
+  );
+}

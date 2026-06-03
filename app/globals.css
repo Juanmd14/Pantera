@@ -1,0 +1,303 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────
+   PANTERA · Dirección A "Sombra"
+   Tokens + utilities globales. Carbón cálido + ámbar único.
+   ────────────────────────────────────────────────────────── */
+
+:root {
+  /* base cálida (cuero) */
+  --ink:      #14110C;
+  --carbon:   #1B1711;
+  --carbon-2: #231E16;
+  --line:     rgba(255, 238, 214, 0.10);
+  --line-2:   rgba(255, 238, 214, 0.055);
+  --fg:       #F1ECE3;
+  --fg-dim:   #A79D8E;
+  --fg-mute:  #6A6253;
+
+  /* ámbar — único acento */
+  --amber:      oklch(0.78 0.155 82);
+  --amber-glow: oklch(0.90 0.135 95);
+  --amber-deep: oklch(0.52 0.115 64);
+
+  /* layout */
+  --pad-x: 48px;
+  --nav-h: 78px;
+  --foot-h: 90px;
+
+  color-scheme: dark;
+}
+
+@media (max-width: 767px) {
+  :root { --pad-x: 22px; }
+}
+
+@theme inline {
+  --color-ink:      var(--ink);
+  --color-carbon:   var(--carbon);
+  --color-carbon-2: var(--carbon-2);
+  --color-fg:       var(--fg);
+  --color-fg-dim:   var(--fg-dim);
+  --color-fg-mute:  var(--fg-mute);
+  --color-amber:    var(--amber);
+  --color-line:     var(--line);
+  --font-display:   var(--font-archivo);
+  --font-mono:      var(--font-space-mono);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+}
+
+html, body { width: 100%; }
+
+body {
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--font-archivo), system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+  line-height: 1.55;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+::selection { background: var(--amber); color: #1a1205; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* ──────────────────────────────────────────────────────────
+   Tipografía utilitaria
+   ────────────────────────────────────────────────────────── */
+
+.mono { font-family: var(--font-space-mono), monospace; }
+
+.lbl {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.lbl-dim { color: var(--fg-mute); }
+
+.display {
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  line-height: 0.82;
+}
+
+.price {
+  font-family: var(--font-space-mono), monospace;
+  color: var(--amber);
+}
+
+/* ──────────────────────────────────────────────────────────
+   Hairlines / divisores
+   ────────────────────────────────────────────────────────── */
+
+.hr { height: 1px; background: var(--line); width: 100%; }
+.vr { width: 1px; background: var(--line); align-self: stretch; }
+
+/* ──────────────────────────────────────────────────────────
+   Placeholder de imagen (rayado + etiqueta + halo opcional)
+   ────────────────────────────────────────────────────────── */
+
+.ph {
+  position: relative;
+  overflow: hidden;
+  background-color: #0f0c08;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 225, 180, 0.045) 0 2px,
+    transparent 2px 12px
+  );
+}
+.ph::after {
+  content: attr(data-ph);
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--fg-mute);
+  border: 1px dashed var(--line);
+  padding: 7px 13px;
+  border-radius: 3px;
+  background: rgba(15, 12, 8, 0.55);
+  white-space: nowrap;
+}
+.ph.lit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 50% 18%,
+    rgba(233, 170, 30, 0.10),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Ojos de pantera (anatomía felina)
+   El transform del .iris es manejado por useTrackingEyes.
+   ────────────────────────────────────────────────────────── */
+
+.eyes { display: flex; align-items: center; }
+
+.eye {
+  position: relative;
+  aspect-ratio: 1.55 / 1;
+  border-radius: 50% / 100%;
+  background: radial-gradient(ellipse at 50% 50%, #070705, #030302 72%);
+  box-shadow:
+    inset 0 0 14px 3px #000,
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transform-origin: 50% 50%;
+  transition: transform 120ms ease;
+}
+
+.iris {
+  position: relative;
+  width: 95%;
+  height: 88%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0) 30%, rgba(0, 0, 0, 0.22) 100%),
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      rgba(40, 20, 0, 0.30) 0deg 1.5deg,
+      rgba(255, 230, 150, 0.12) 1.5deg 3deg
+    ),
+    radial-gradient(circle at 50% 40%, var(--amber-glow) 0%, var(--amber) 58%, var(--amber-deep) 100%);
+  box-shadow:
+    0 0 22px 3px rgba(232, 170, 30, 0.40),
+    inset 0 -5px 12px rgba(60, 30, 0, 0.45),
+    inset 0 5px 10px rgba(255, 228, 150, 0.40);
+  will-change: transform;
+}
+
+.iris::after {
+  content: "";
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 17%;
+  height: 19%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0.25) 68%, transparent 72%);
+}
+
+.pupil {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 13%;
+  height: 72%;
+  background: radial-gradient(ellipse at 50% 42%, #150d03, #000 62%);
+  border-radius: 50%;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Botones y chips
+   ────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 15px 26px;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  background: transparent;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              color 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.btn.solid {
+  background: var(--amber);
+  color: #1a1205;
+  border-color: var(--amber);
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .btn:hover { background: rgba(232, 170, 30, 0.08); }
+  .btn.solid:hover {
+    background: var(--amber-glow);
+    border-color: var(--amber-glow);
+  }
+}
+
+.chip {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  color: var(--fg-dim);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.chip.on { border-color: var(--amber); color: var(--amber); }
+
+@media (hover: hover) {
+  .chip:hover { border-color: rgba(232, 170, 30, 0.45); color: var(--fg); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Reveal-on-scroll
+   ────────────────────────────────────────────────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   Marquesina mono (helper editorial)
+   ────────────────────────────────────────────────────────── */
+
+.marq {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  white-space: nowrap;
+}
+.marq b { color: var(--amber); font-weight: 400; }

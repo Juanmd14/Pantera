@@ -1,0 +1,13 @@
+.foot {
+  height: var(--foot-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--pad-x);
+  color: var(--fg-mute);
+}
+
+.copy {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
