@@ -9,3 +9,5 @@ export default function BrandMark({ size = "nav" }: Props) {
     </span>
   );
 }
+
+
