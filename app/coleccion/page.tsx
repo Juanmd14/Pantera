@@ -14,7 +14,7 @@ export default function ColeccionPage() {
         <div className="lbl">Colección — Otoño / Invierno 2026</div>
         <div className={styles.headRow}>
           <h1 className={`display ${styles.title}`}>Sombra</h1>
-          <div className={`mono ${styles.count}`}>12 PIEZAS</div>
+          <div className={`mono ${styles.count}`}>{products.length} PIEZAS</div>
         </div>
       </section>
 

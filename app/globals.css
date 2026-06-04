@@ -207,10 +207,11 @@ button { font-family: inherit; }
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 13%;
-  height: 72%;
+  width: 10%;
+  height: 82%;
   background: radial-gradient(ellipse at 50% 42%, #150d03, #000 62%);
   border-radius: 50%;
+  box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.7);
 }
 
 /* ──────────────────────────────────────────────────────────
