@@ -21,6 +21,9 @@ export default function EditorialRow({ product, right = false }: Props) {
         lit
         className={styles.image}
         height={520}
+        src={product.image}
+        alt={`${product.name} — Look ${product.look}`}
+        sizes="(max-width: 900px) 100vw, 520px"
       />
     </Link>
   );

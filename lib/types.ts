@@ -7,4 +7,5 @@ export type Product = {
   material: string;
   price: number;
   imageLabel: string;
+  image?: string;
 };

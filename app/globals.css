@@ -146,7 +146,17 @@ button { font-family: inherit; }
     transparent 60%
   );
   pointer-events: none;
+  z-index: 2;
 }
+
+/* Cuando el Placeholder muestra una imagen real, se oculta el rayado
+   y la etiqueta; el halo .lit, si está, queda por encima. */
+.ph.imaged {
+  background-color: transparent;
+  background-image: none;
+}
+.ph.imaged::after { display: none; }
+.ph.imaged > img { z-index: 0; }
 
 /* ──────────────────────────────────────────────────────────
    Ojos de pantera (anatomía felina)

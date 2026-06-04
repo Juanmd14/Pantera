@@ -44,6 +44,9 @@ export default async function ProductoPage({
             <Placeholder
               className={`${styles.thumb} ${styles.thumbActive}`}
               height={114}
+              src={product.image}
+              alt={`${product.name} — vista 1`}
+              sizes="84px"
             />
             <Placeholder className={styles.thumb} height={114} />
             <Placeholder className={styles.thumb} height={114} />
@@ -53,6 +56,10 @@ export default async function ProductoPage({
             lit
             className={styles.mainImage}
             height={760}
+            src={product.image}
+            alt={`${product.name} — Look ${product.look}`}
+            sizes="(max-width: 900px) 100vw, 50vw"
+            priority
           />
         </div>
 
@@ -110,7 +117,13 @@ export default async function ProductoPage({
               className={styles.relatedCard}
               aria-label={`Ver ${p.name}`}
             >
-              <Placeholder label={p.imageLabel} height={320} />
+              <Placeholder
+                label={p.imageLabel}
+                height={320}
+                src={p.image}
+                alt={`${p.name} — Look ${p.look}`}
+                sizes="(max-width: 900px) 100vw, 33vw"
+              />
               <div className={styles.relatedRow}>
                 <span className={styles.relatedName}>{p.name}</span>
                 <span className={`price ${styles.relatedPrice}`}>€ {p.price}</span>

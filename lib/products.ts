@@ -11,6 +11,7 @@ export const products: Product[] = [
     material: "MERINO / SHADOW",
     price: 690,
     imageLabel: "LOOK 01 · 4:5",
+    image: "/images/modelos1.jpg",
   },
   {
     slug: "gabardina-nocturna",
@@ -77,6 +78,7 @@ export const products: Product[] = [
     material: "NAPA MATE / ÓNIX",
     price: 820,
     imageLabel: "LOOK 07 · 4:5",
+    image: "/images/modelos4.jpg",
   },
   {
     slug: "camisa-acechante",
@@ -121,6 +123,30 @@ export const products: Product[] = [
     material: "CUERO CRUDO / GOMA",
     price: 540,
     imageLabel: "LOOK 11 · 4:5",
+  },
+  {
+    slug: "sudadera-marmol",
+    look: "12",
+    name: "Sudadera Mármol",
+    shortName: "Sudadera\nMármol",
+    description:
+      "Algodón pesado en blanco roto con paneles internos en obsidiana. Capucha estructurada, gráfico bordado al tono.",
+    material: "ALGODÓN PESADO / BLANCO ROTO",
+    price: 290,
+    imageLabel: "LOOK 12 · 4:5",
+    image: "/images/ropa.jpg",
+  },
+  {
+    slug: "set-campo",
+    look: "13",
+    name: "Set Campo",
+    shortName: "Set\nCampo",
+    description:
+      "Conjunto liviano de algodón sin teñir. Camisa oversize y short corto; uniforme de verano para días largos.",
+    material: "ALGODÓN CRUDO / TIERRA",
+    price: 240,
+    imageLabel: "LOOK 13 · 4:5",
+    image: "/images/modelos3.jpg",
   },
 ];
 

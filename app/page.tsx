@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Eyes from "./components/Eyes";
 import Placeholder from "./components/Placeholder";
 import Reveal from "./components/Reveal";
@@ -37,6 +38,10 @@ export default function HomePage() {
             lit
             height={720}
             className={styles.campaignImg}
+            src="/images/modelos1.jpg"
+            alt="Campaña FW26 — dos figuras en el callejón"
+            sizes="100vw"
+            priority
           >
             <div className={styles.campaignLeft}>
               <div className="lbl">Look 01</div>
@@ -59,6 +64,21 @@ export default function HomePage() {
             No es una tienda. Es el territorio del animal — cada prenda se mueve{" "}
             <span className={styles.manifestoAccent}>antes que vos</span>.
           </p>
+        </section>
+      </Reveal>
+
+      {/* Firma — logo de la marca */}
+      <Reveal>
+        <section className={styles.sign}>
+          <Image
+            src="/images/logo.jpg"
+            alt="Pantera"
+            width={520}
+            height={520}
+            className={styles.signMark}
+            sizes="(max-width: 480px) 220px, (max-width: 900px) 320px, 420px"
+          />
+          <div className={`mono ${styles.signLine}`}>FW26 · SOMBRA</div>
         </section>
       </Reveal>
     </>
