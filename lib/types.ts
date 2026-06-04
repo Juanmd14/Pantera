@@ -7,5 +7,13 @@ export type Product = {
   material: string;
   price: number;
   imageLabel: string;
+  collection: string;
   image?: string;
+};
+
+export type Collection = {
+  slug: string;
+  name: string;
+  tagline: string;
+  image: string;
 };

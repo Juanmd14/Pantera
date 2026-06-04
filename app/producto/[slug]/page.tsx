@@ -4,6 +4,7 @@ import Placeholder from "../../components/Placeholder";
 import SizeChips from "../../components/SizeChips";
 import Accordion from "../../components/Accordion";
 import StickyCta from "../../components/StickyCta";
+import AddToBag from "../../components/AddToBag";
 import { formatPrice, getProduct, getRelated, visibleProducts } from "@/lib/products";
 import styles from "./producto.module.css";
 
@@ -83,11 +84,9 @@ export default async function ProductoPage({
             <SizeChips sizes={["XS", "S", "M", "L", "XL"]} defaultSize="S" />
           </div>
 
-          <button type="button" className={`btn solid ${styles.cta}`}>
-            Añadir a la bolsa
-          </button>
+          <AddToBag slug={product.slug} className={styles.cta} />
 
-          <StickyCta price={product.price} />
+          <StickyCta price={product.price} slug={product.slug} />
 
           <div className={styles.accGroup}>
             <Accordion title="Materiales y cuidado">

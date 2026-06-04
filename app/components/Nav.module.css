@@ -55,6 +55,63 @@
 
 .searchBtn:active { transform: scale(0.94); }
 
+/* ── Botón Bolsa ────────────────────────────────────────── */
+
+.bagBtn {
+  background: transparent;
+  border: 0;
+  padding: 6px 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg);
+  cursor: pointer;
+  transition: color 220ms ease;
+}
+
+.bagLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.bagCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--amber);
+  color: #03130c;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (hover: hover) {
+  .bagBtn:hover { color: var(--amber); }
+}
+
+.overlayBag {
+  background: transparent;
+  border: 0;
+  color: var(--fg-mute);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+  transition: color 200ms ease;
+}
+
+@media (hover: hover) {
+  .overlayBag:hover { color: var(--amber); }
+}
+
 /* ── Menú trigger ─────────────────────────────────────── */
 
 .trigger {
@@ -160,6 +217,11 @@
 }
 
 /* ── Breakpoints ─────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .rightCluster { gap: 10px; }
+  .searchLabel { display: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .overlay,

@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import BrandMark from "./BrandMark";
 import PawIcon from "./PawIcon";
 import SearchOverlay from "./SearchOverlay";
+import CartDrawer from "./CartDrawer";
+import { useCart } from "@/lib/cart";
 import styles from "./Nav.module.css";
 
 const LINKS: { href: string; label: string; amber?: boolean }[] = [
@@ -19,6 +21,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { count, setOpen: setCartOpen } = useCart();
 
   useEffect(() => {
     setOpen(false);
@@ -58,6 +61,20 @@ export default function Nav() {
           >
             <span className={styles.searchLabel}>Buscar</span>
             <PawIcon size={20} />
+          </button>
+
+          <button
+            type="button"
+            className={styles.bagBtn}
+            aria-label={`Abrir bolsa${count > 0 ? `, ${count} ítems` : ""}`}
+            onClick={() => {
+              setOpen(false);
+              setSearchOpen(false);
+              setCartOpen(true);
+            }}
+          >
+            <span className={styles.bagLabel}>Bolsa</span>
+            {count > 0 && <span className={styles.bagCount}>{count}</span>}
           </button>
 
           <button
@@ -106,11 +123,21 @@ export default function Nav() {
         </ul>
 
         <div className={styles.overlayFoot}>
-          <span className="mono">Bolsa · 0</span>
+          <button
+            type="button"
+            className={`mono ${styles.overlayBag}`}
+            onClick={() => {
+              setOpen(false);
+              setCartOpen(true);
+            }}
+          >
+            Bolsa · {count}
+          </button>
         </div>
       </div>
 
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <CartDrawer />
     </>
   );
 }

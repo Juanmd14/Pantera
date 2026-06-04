@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, Space_Mono } from "next/font/google";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import { CartProvider } from "@/lib/cart";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -45,9 +46,11 @@ export default function RootLayout({
   return (
     <html lang="es-AR">
       <body className={`${archivo.variable} ${spaceMono.variable}`}>
-        <Nav />
-        <main>{children}</main>
-        <Footer />
+        <CartProvider>
+          <Nav />
+          <main>{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

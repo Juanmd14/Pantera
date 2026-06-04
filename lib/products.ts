@@ -1,4 +1,4 @@
-import type { Product } from "./types";
+import type { Collection, Product } from "./types";
 
 export const products: Product[] = [
   {
@@ -11,6 +11,7 @@ export const products: Product[] = [
     material: "MERINO / SHADOW",
     price: 30000,
     imageLabel: "LOOK 01 · 4:5",
+    collection: "sombra",
     image: "/images/modelos1.jpg",
   },
   {
@@ -23,6 +24,7 @@ export const products: Product[] = [
     material: "ALGODÓN CRUDO / TIERRA",
     price: 15000,
     imageLabel: "LOOK 02 · 4:5",
+    collection: "campo",
     image: "/images/modelos3.jpg",
   },
   {
@@ -35,6 +37,7 @@ export const products: Product[] = [
     material: "NAPA MATE / ÓNIX",
     price: 28000,
     imageLabel: "LOOK 03 · 4:5",
+    collection: "sombra",
     image: "/images/modelos4.jpg",
   },
   {
@@ -47,6 +50,7 @@ export const products: Product[] = [
     material: "ALGODÓN PESADO / BLANCO ROTO",
     price: 18000,
     imageLabel: "LOOK 04 · 4:5",
+    collection: "campo",
     image: "/images/ropa.jpg",
   },
   {
@@ -59,6 +63,7 @@ export const products: Product[] = [
     material: "GABARDINA / SEDA",
     price: 27000,
     imageLabel: "LOOK 05 · 4:5",
+    collection: "sombra",
   },
   {
     slug: "sueter-medianoche",
@@ -70,6 +75,7 @@ export const products: Product[] = [
     material: "CASHMERE / NOIR",
     price: 19000,
     imageLabel: "LOOK 06 · 4:5",
+    collection: "sombra",
   },
   {
     slug: "pantalon-caza",
@@ -81,6 +87,7 @@ export const products: Product[] = [
     material: "LANA FRÍA / CARBÓN",
     price: 20000,
     imageLabel: "LOOK 07 · 4:5",
+    collection: "campo",
   },
   {
     slug: "vestido-eclipse",
@@ -92,6 +99,7 @@ export const products: Product[] = [
     material: "SEDA SALVAJE / NOIR",
     price: 24000,
     imageLabel: "LOOK 08 · 4:5",
+    collection: "sombra",
   },
   {
     slug: "blazer-cazador",
@@ -103,6 +111,7 @@ export const products: Product[] = [
     material: "LANA / OBSIDIANA",
     price: 26000,
     imageLabel: "LOOK 09 · 4:5",
+    collection: "sombra",
   },
   {
     slug: "camisa-acechante",
@@ -114,6 +123,7 @@ export const products: Product[] = [
     material: "POPELÍN / GRAFITO",
     price: 16000,
     imageLabel: "LOOK 10 · 4:5",
+    collection: "campo",
   },
   {
     slug: "falda-medianoche",
@@ -125,6 +135,7 @@ export const products: Product[] = [
     material: "LANA CRUDA / TINTA",
     price: 21000,
     imageLabel: "LOOK 11 · 4:5",
+    collection: "sombra",
   },
   {
     slug: "trench-niebla",
@@ -136,6 +147,7 @@ export const products: Product[] = [
     material: "GABARDINA TÉCNICA / HUMO",
     price: 27000,
     imageLabel: "LOOK 12 · 4:5",
+    collection: "sombra",
   },
   {
     slug: "botas-paso-mudo",
@@ -147,6 +159,7 @@ export const products: Product[] = [
     material: "CUERO CRUDO / GOMA",
     price: 25000,
     imageLabel: "LOOK 13 · 4:5",
+    collection: "campo",
   },
 ];
 
@@ -154,6 +167,32 @@ export const products: Product[] = [
 // se mantienen en el catálogo para iterar después, pero ningún render
 // público las recorre.
 export const visibleProducts: Product[] = products.filter((p) => Boolean(p.image));
+
+// ── Colecciones ────────────────────────────────────────────────
+// Cada pieza pertenece a una colección (campo | sombra). La portada
+// reusa una de las fotos de campaña ya disponibles en /public.
+export const collections: Collection[] = [
+  {
+    slug: "campo",
+    name: "Campo",
+    tagline: "Crudo, liviano, de los días largos",
+    image: "/images/modelos3.jpg",
+  },
+  {
+    slug: "sombra",
+    name: "Sombra",
+    tagline: "Elegancia oscura en movimiento",
+    image: "/images/modelos1.jpg",
+  },
+];
+
+export function getCollection(slug: string): Collection | undefined {
+  return collections.find((c) => c.slug === slug);
+}
+
+export function getProductsByCollection(slug: string): Product[] {
+  return visibleProducts.filter((p) => p.collection === slug);
+}
 
 export function getProduct(slug: string): Product | undefined {
   return visibleProducts.find((p) => p.slug === slug);

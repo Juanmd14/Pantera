@@ -5,12 +5,10 @@ import InstagramIcon from "./components/InstagramIcon";
 import Placeholder from "./components/Placeholder";
 import Reveal from "./components/Reveal";
 import WhatsappIcon from "./components/WhatsappIcon";
-import { formatPrice, getProduct } from "@/lib/products";
+import { collections, getProductsByCollection } from "@/lib/products";
 import styles from "./home.module.css";
 
 export default function HomePage() {
-  const setCampo = getProduct("set-campo");
-
   return (
     <>
       {/* Hero */}
@@ -33,75 +31,60 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Campaña */}
+      {/* Colecciones — dos vitrinas parejas, cada una abre su colección */}
       <Reveal>
-        <section className={styles.campaign}>
-          <Placeholder
-            label="CAMPAÑA · FIGURA EN MOVIMIENTO · 4:5"
-            lit
-            height={720}
-            className={styles.campaignImg}
-            src="/images/modelos1.jpg"
-            alt="Campaña Sombra — dos figuras en el callejón"
-            sizes="100vw"
-            priority
-          >
-            <div className={styles.campaignLeft}>
-              <div className="lbl">Look 01</div>
-              <div className={`display ${styles.campaignName}`}>Abrigo Sombra</div>
-            </div>
-            <div className={`mono ${styles.campaignRight}`}>
-              MERINO / SHADOW
-              <br />
-              <span className={styles.priceAmber}>$30.000</span>
-            </div>
-          </Placeholder>
+        <section className={styles.collections}>
+          <div className={styles.collectionsHead}>
+            <div className="lbl">Las colecciones</div>
+            <h2 className={`display ${styles.collectionsTitle}`}>
+              Elegí tu territorio
+            </h2>
+          </div>
+
+          <div className={styles.collectionsGrid}>
+            {collections.map((collection) => {
+              const pieces = getProductsByCollection(collection.slug);
+              return (
+                <Link
+                  key={collection.slug}
+                  href={`/coleccion/${collection.slug}`}
+                  className={styles.collectionCard}
+                  aria-label={`Ver colección ${collection.name}`}
+                >
+                  <Placeholder
+                    label={collection.name.toUpperCase()}
+                    lit
+                    className={styles.collectionImg}
+                    height={620}
+                    src={collection.image}
+                    alt={`Colección ${collection.name}`}
+                    sizes="(max-width: 900px) 100vw, 50vw"
+                    priority
+                  />
+                  <div className={styles.collectionBody}>
+                    <div className="lbl">Colección</div>
+                    <h3 className={`display ${styles.collectionName}`}>
+                      {collection.name}
+                    </h3>
+                    <p className={styles.collectionTagline}>
+                      {collection.tagline}
+                    </p>
+                    <div className={styles.collectionCta}>
+                      <span className={`mono ${styles.collectionCount}`}>
+                        {pieces.length}{" "}
+                        {pieces.length === 1 ? "PIEZA" : "PIEZAS"}
+                      </span>
+                      <span className={styles.collectionArrow} aria-hidden>
+                        Ver colección →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </section>
       </Reveal>
-
-      {/* Segundo look — Set Campo */}
-      {setCampo && (
-        <Reveal>
-          <section className={styles.secondLook}>
-            <Link
-              href={`/producto/${setCampo.slug}`}
-              className={styles.secondLookImageLink}
-              aria-label={`Ver ${setCampo.name}`}
-            >
-              <Placeholder
-                label={setCampo.imageLabel}
-                className={styles.secondLookImg}
-                height={620}
-                src={setCampo.image}
-                alt={`${setCampo.name} — Look ${setCampo.look}`}
-                sizes="(max-width: 900px) 100vw, 50vw"
-              />
-            </Link>
-            <div className={styles.secondLookText}>
-              <div className="lbl">Look {setCampo.look}</div>
-              <h2 className={`display ${styles.secondLookTitle}`}>
-                {setCampo.name}
-              </h2>
-              <p className={styles.secondLookDesc}>{setCampo.description}</p>
-              <div className={`mono lbl-dim ${styles.secondLookMaterial}`}>
-                {setCampo.material}
-              </div>
-              <div className={`price ${styles.secondLookPrice}`}>
-                {formatPrice(setCampo.price)}
-              </div>
-              <Link
-                href="/coleccion"
-                className={styles.viewMore}
-                aria-label="Ver toda la colección Sombra"
-              >
-                <span className={styles.viewMoreLine} aria-hidden />
-                <span>Ver colección</span>
-                <span className={styles.viewMoreArrow} aria-hidden>→</span>
-              </Link>
-            </div>
-          </section>
-        </Reveal>
-      )}
 
       {/* Manifiesto */}
       <Reveal>
