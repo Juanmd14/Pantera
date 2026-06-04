@@ -1,10 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import Eyes from "./components/Eyes";
 import Placeholder from "./components/Placeholder";
 import Reveal from "./components/Reveal";
+import { formatPrice, getProduct } from "@/lib/products";
 import styles from "./home.module.css";
 
 export default function HomePage() {
+  const setCampo = getProduct("set-campo");
+
   return (
     <>
       {/* Hero */}
@@ -55,6 +59,50 @@ export default function HomePage() {
           </Placeholder>
         </section>
       </Reveal>
+
+      {/* Segundo look — Set Campo */}
+      {setCampo && (
+        <Reveal>
+          <section className={styles.secondLook}>
+            <Link
+              href={`/producto/${setCampo.slug}`}
+              className={styles.secondLookImageLink}
+              aria-label={`Ver ${setCampo.name}`}
+            >
+              <Placeholder
+                label={setCampo.imageLabel}
+                className={styles.secondLookImg}
+                height={620}
+                src={setCampo.image}
+                alt={`${setCampo.name} — Look ${setCampo.look}`}
+                sizes="(max-width: 900px) 100vw, 50vw"
+              />
+            </Link>
+            <div className={styles.secondLookText}>
+              <div className="lbl">Look {setCampo.look}</div>
+              <h2 className={`display ${styles.secondLookTitle}`}>
+                {setCampo.name}
+              </h2>
+              <p className={styles.secondLookDesc}>{setCampo.description}</p>
+              <div className={`mono lbl-dim ${styles.secondLookMaterial}`}>
+                {setCampo.material}
+              </div>
+              <div className={`price ${styles.secondLookPrice}`}>
+                {formatPrice(setCampo.price)}
+              </div>
+              <Link
+                href="/coleccion"
+                className={styles.viewMore}
+                aria-label="Ver toda la colección Sombra"
+              >
+                <span className={styles.viewMoreLine} aria-hidden />
+                <span>Ver colección</span>
+                <span className={styles.viewMoreArrow} aria-hidden>→</span>
+              </Link>
+            </div>
+          </section>
+        </Reveal>
+      )}
 
       {/* Manifiesto */}
       <Reveal>
