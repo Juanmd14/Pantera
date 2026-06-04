@@ -38,10 +38,10 @@ export const products: Product[] = [
     image: "/images/modelos4.jpg",
   },
   {
-    slug: "sudadera-marmol",
+    slug: "sudadera-bruma",
     look: "04",
-    name: "Sudadera Mármol",
-    shortName: "Sudadera\nMármol",
+    name: "Sudadera Bruma",
+    shortName: "Sudadera\nBruma",
     description:
       "Algodón pesado en blanco roto con paneles internos en obsidiana. Capucha estructurada, gráfico bordado al tono.",
     material: "ALGODÓN PESADO / BLANCO ROTO",

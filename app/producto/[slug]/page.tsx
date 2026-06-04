@@ -98,8 +98,9 @@ export default async function ProductoPage({
             </Accordion>
             <Accordion title="Envíos y devoluciones">
               <p>
-                Envío gratuito a Argentina y la UE en 3–6 días hábiles.
-                Devolución sin cargo dentro de los 30 días posteriores a la entrega.
+                Envío gratuito en Argentina en 3–6 días hábiles; al resto de
+                Latinoamérica, 5–10 días. Devolución sin cargo dentro de los 30
+                días posteriores a la entrega.
               </p>
             </Accordion>
           </div>
