@@ -146,3 +146,10 @@
   /* Espacio para no quedar tapados por la barra sticky del CTA */
   .related { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px) + 76px); }
 }
+
+@media (max-width: 480px) {
+  .hero { gap: 20px; }
+  .thumb { min-width: 64px; height: 86px; }
+  .thumbs { gap: 10px; }
+  .price { font-size: 20px; margin: 18px 0; }
+}

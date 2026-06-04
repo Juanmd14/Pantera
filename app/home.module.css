@@ -40,7 +40,8 @@
 }
 
 .wordmark {
-  font-size: clamp(96px, 14vw, 170px);
+  font-size: clamp(54px, 16vw, 170px);
+  letter-spacing: -0.04em;
   background: linear-gradient(180deg, #ffffff 0%, #cfd3d6 60%, #8a9096 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -148,18 +149,27 @@
 
   /* Campaña: imagen más baja, captions stackeadas en bottom-left */
   .campaignImg { height: 480px !important; }
-  .campaignLeft { bottom: 86px; }
+  .campaignLeft {
+    bottom: 96px;
+    max-width: calc(100vw - 2 * var(--pad-x));
+  }
   .campaignRight {
     left: var(--pad-x);
     right: auto;
     bottom: 24px;
     text-align: left;
     line-height: 1.7;
+    max-width: calc(100vw - 2 * var(--pad-x));
   }
-  .campaignName { font-size: 28px; }
+  .campaignName { font-size: clamp(22px, 7vw, 30px); }
 
   .manifesto { padding: 56px var(--pad-x); }
   .manifestoText { font-size: 24px; }
+}
+
+@media (max-width: 480px) {
+  .eyesHero { gap: clamp(28px, 8vw, 44px) !important; }
+  .eyesHero :global(.eye) { width: clamp(58px, 18vw, 78px) !important; }
 }
 
 @media (max-width: 380px) {
