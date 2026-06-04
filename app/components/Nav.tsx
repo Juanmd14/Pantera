@@ -62,28 +62,30 @@ export default function Nav() {
           <span className={styles.cart}>Bolsa · 0</span>
         </div>
 
-        <button
-          type="button"
-          className={styles.searchBtn}
-          aria-label="Buscar"
-          onClick={() => {
-            setOpen(false);
-            setSearchOpen(true);
-          }}
-        >
-          <PawIcon size={20} />
-        </button>
+        <div className={styles.rightCluster}>
+          <button
+            type="button"
+            className={styles.searchBtn}
+            aria-label="Buscar"
+            onClick={() => {
+              setOpen(false);
+              setSearchOpen(true);
+            }}
+          >
+            <PawIcon size={20} />
+          </button>
 
-        <button
-          type="button"
-          className={styles.trigger}
-          aria-label="Abrir menú"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen(true)}
-        >
-          Menú
-        </button>
+          <button
+            type="button"
+            className={styles.trigger}
+            aria-label="Abrir menú"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen(true)}
+          >
+            Menú
+          </button>
+        </div>
       </nav>
 
       <div

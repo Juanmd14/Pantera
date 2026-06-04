@@ -29,6 +29,33 @@ const irisState = new WeakMap<IrisEl, { x: number; y: number }>();
 let started = false;
 let mountTime = 0;
 
+// Direcciones de merodeo — bias hacia los lados y abajo, propio del cazador
+// que escanea el suelo. Los valores son multiplicadores de la amplitud
+// máxima (rango -1..1).
+const PROWL_DIRECTIONS: ReadonlyArray<{ x: number; y: number }> = [
+  { x:  0.00, y:  0.60 },  // abajo
+  { x: -0.55, y:  0.45 },  // abajo-izquierda
+  { x:  0.55, y:  0.45 },  // abajo-derecha
+  { x: -0.85, y:  0.05 },  // izquierda
+  { x:  0.85, y:  0.05 },  // derecha
+  { x: -0.40, y: -0.25 },  // arriba-izquierda (sutil)
+  { x:  0.40, y: -0.25 },  // arriba-derecha (sutil)
+];
+
+const prowlTarget = {
+  x: 0,
+  y: 0,
+  nextChangeAt: 0,
+};
+
+function pickProwlDirection(now: number) {
+  const dir = PROWL_DIRECTIONS[Math.floor(Math.random() * PROWL_DIRECTIONS.length)];
+  prowlTarget.x = dir.x;
+  prowlTarget.y = dir.y;
+  // Mantiene la mirada 1.6–4.0 s antes de elegir otra dirección.
+  prowlTarget.nextChangeAt = now + 1600 + Math.random() * 2400;
+}
+
 const INTRO_CALM_MS = 1000;
 const INTRO_PROWL_END_MS = 3500;
 
@@ -64,12 +91,16 @@ function frame() {
   if (registry.size > 0) {
     const now = performance.now();
     const sinceMount = now - mountTime;
-    const tNow = Date.now() / 2600;
 
     const inCalm = sinceMount < INTRO_CALM_MS;
     const inIntroProwl = !inCalm && sinceMount < INTRO_PROWL_END_MS;
     const pointerActive =
       !inCalm && !inIntroProwl && now - pointer.last < 1400;
+    const prowling = !inCalm && !pointerActive && !prefersReduced;
+
+    if (prowling && now > prowlTarget.nextChangeAt) {
+      pickProwlDirection(now);
+    }
 
     registry.forEach((iris) => {
       const eye = iris.parentElement;
@@ -95,9 +126,14 @@ function frame() {
         const intensity = 0.55 + focus * 0.45;
         targetX = (dx / d) * maxX * intensity;
         targetY = (dy / d) * maxY * intensity;
-      } else if (!prefersReduced) {
-        targetX = Math.cos(tNow) * r.width * 0.025;
-        targetY = Math.sin(tNow * 1.3) * r.height * 0.035;
+      } else if (prowling) {
+        // Merodeo deliberado: mantiene una dirección 1.6–4 s antes de
+        // saccadear a otra. Amplitudes más grandes que un drift continuo
+        // para que se note el "está mirando hacia algún lado".
+        const maxX = r.width * 0.075;
+        const maxY = r.height * 0.105;
+        targetX = prowlTarget.x * maxX;
+        targetY = prowlTarget.y * maxY;
       }
 
       let state = irisState.get(iris);
