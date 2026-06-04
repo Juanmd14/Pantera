@@ -41,7 +41,7 @@
 
 .wordmark {
   font-size: clamp(96px, 14vw, 170px);
-  background: linear-gradient(180deg, #fff, #cec7bb 60%, #8b8373);
+  background: linear-gradient(180deg, #ffffff 0%, #cfd3d6 60%, #8a9096 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
