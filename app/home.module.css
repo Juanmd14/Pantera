@@ -4,7 +4,8 @@
 
 .hero {
   position: relative;
-  min-height: 824px;
+  min-height: 100vh;
+  min-height: 100svh;
   display: grid;
   place-items: center;
   text-align: center;
@@ -32,11 +33,11 @@
 }
 
 .kicker {
-  margin-bottom: 42px;
+  margin-bottom: 58px;
 }
 
 .eyesHero {
-  margin-bottom: 4px;
+  margin-bottom: 44px;
 }
 
 .wordmark {
@@ -51,15 +52,11 @@
 }
 
 .tagline {
-  margin-top: 28px;
-  color: var(--fg-dim);
-  font-size: 17px;
-  letter-spacing: 0.04em;
-  font-weight: 300;
-}
-
-.taglineAccent {
+  margin-top: 38px;
   color: var(--amber);
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  font-weight: 300;
 }
 
 .scrollCue {
@@ -284,9 +281,10 @@
 }
 
 @media (max-width: 767px) {
-  .hero { min-height: 640px; padding-top: calc(var(--nav-h) + 20px); }
-  .kicker { margin-bottom: 28px; font-size: 10px; }
-  .tagline { font-size: 14px; max-width: 28ch; line-height: 1.5; }
+  .hero { min-height: 100svh; padding-top: calc(var(--nav-h) + 20px); }
+  .kicker { margin-bottom: 40px; font-size: 10px; }
+  .eyesHero { margin-bottom: 32px; }
+  .tagline { margin-top: 28px; font-size: 13px; max-width: 28ch; line-height: 1.5; }
   .scrollCue { font-size: 10px; bottom: 18px; letter-spacing: 0.22em; }
 
   /* Campaña: imagen más baja, captions stackeadas en bottom-left */

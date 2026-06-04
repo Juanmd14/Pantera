@@ -23,10 +23,7 @@ export default function HomePage() {
 
           <h1 className={`display ${styles.wordmark}`}>Pantera</h1>
 
-          <p className={styles.tagline}>
-            Elegancia oscura en movimiento.{" "}
-            <span className={styles.taglineAccent}>Sombra.</span>
-          </p>
+          <p className={styles.tagline}>Elegancia oscura en movimiento</p>
         </div>
 
         <div className={`mono ${styles.scrollCue}`} aria-hidden>

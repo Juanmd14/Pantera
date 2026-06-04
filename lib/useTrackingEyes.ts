@@ -116,6 +116,15 @@ function blinkAllOnce(durationMs: number) {
   });
 }
 
+function halfCloseAllOnce(durationMs: number) {
+  document.querySelectorAll<HTMLElement>("[data-eye]").forEach((eye) => {
+    eye.style.transform = "scaleY(0.42)";
+    setTimeout(() => {
+      eye.style.transform = "";
+    }, durationMs);
+  });
+}
+
 function scheduleBlink() {
   const delay = 2800 + Math.random() * 4400;
   setTimeout(() => {
@@ -136,12 +145,17 @@ function scheduleBlink() {
 }
 
 function runIntro() {
-  // Mirada de presentación: slow blink al filo del segundo.
+  // Coreografía de presentación: pestañea, entrecierra, abre, pestañea
+  // y queda lista para merodear. Cada paso encadena con el siguiente.
   setTimeout(() => {
-    blinkAllOnce(320);
-    // Después de la presentación + merodeo forzado, arranca el ciclo normal.
-    const remaining = Math.max(0, INTRO_PROWL_END_MS - INTRO_CALM_MS - 200);
-    setTimeout(scheduleBlink, remaining + 600);
+    blinkAllOnce(150);                            // 1000ms: primer parpadeo
+    setTimeout(() => {
+      halfCloseAllOnce(520);                      // 1330ms: entrecerrar lento
+      setTimeout(() => {
+        blinkAllOnce(140);                        // 2030ms: parpadeo final
+        setTimeout(scheduleBlink, 260);           // ~2300ms: ciclo normal
+      }, 700);
+    }, 330);
   }, INTRO_CALM_MS);
 }
 
