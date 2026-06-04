@@ -46,22 +46,6 @@ export default function Nav() {
           <BrandMark size="nav" />
         </Link>
 
-        <div className={styles.menu}>
-          {LINKS.map((l) => (
-            <Link
-              key={l.label}
-              href={l.href}
-              className={l.amber ? styles.amber : undefined}
-            >
-              {l.label}
-            </Link>
-          ))}
-        </div>
-
-        <div className={styles.icons}>
-          <span className={styles.cart}>Bolsa · 0</span>
-        </div>
-
         <div className={styles.rightCluster}>
           <button
             type="button"

@@ -144,7 +144,7 @@ function frame() {
         state = { x: targetX, y: targetY };
         irisState.set(iris, state);
       }
-      const ease = pointerActive ? 0.14 : 0.08;
+      const ease = pointerActive ? 0.19 : 0.13;
       state.x += (targetX - state.x) * ease;
       state.y += (targetY - state.y) * ease;
 

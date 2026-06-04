@@ -20,30 +20,6 @@
   text-decoration: none;
 }
 
-.menu {
-  display: flex;
-  gap: 30px;
-}
-
-.menu a {
-  color: var(--fg-dim);
-  text-decoration: none;
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  transition: color 200ms ease;
-}
-.menu a:hover { color: var(--fg); }
-.menu a.amber,
-.amber { color: var(--amber); }
-
-.icons {
-  display: flex;
-  gap: 22px;
-  color: var(--fg-dim);
-  font-size: 13px;
-  letter-spacing: 0.04em;
-}
-
 /* ── Botón Pata (Buscar) ────────────────────────────────── */
 
 .rightCluster {
@@ -79,14 +55,10 @@
 
 .searchBtn:active { transform: scale(0.94); }
 
-@media (max-width: 480px) {
-  .searchLabel { display: none; }
-}
-
-/* ── Mobile trigger ─────────────────────────────────────── */
+/* ── Menú trigger ─────────────────────────────────────── */
 
 .trigger {
-  display: none;
+  display: inline-block;
   background: transparent;
   border: 0;
   color: var(--fg);
@@ -188,22 +160,6 @@
 }
 
 /* ── Breakpoints ─────────────────────────────────────────── */
-
-@media (max-width: 900px) {
-  .menu { gap: 22px; }
-  .menu a { font-size: 12px; }
-  .icons { gap: 16px; }
-}
-
-@media (max-width: 767px) {
-  .menu,
-  .icons { display: none; }
-  .trigger { display: inline-block; }
-}
-
-@media (min-width: 768px) {
-  .overlay { display: none; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .overlay,
