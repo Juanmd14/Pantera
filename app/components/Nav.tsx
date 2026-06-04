@@ -72,6 +72,7 @@ export default function Nav() {
               setSearchOpen(true);
             }}
           >
+            <span className={styles.searchLabel}>Buscar</span>
             <PawIcon size={20} />
           </button>
 

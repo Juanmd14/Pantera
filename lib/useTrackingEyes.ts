@@ -128,12 +128,15 @@ function frame() {
         targetY = (dy / d) * maxY * intensity;
       } else if (prowling) {
         // Merodeo deliberado: mantiene una dirección 1.6–4 s antes de
-        // saccadear a otra. Amplitudes más grandes que un drift continuo
-        // para que se note el "está mirando hacia algún lado".
+        // saccadear a otra. Mientras tanto un micro-jitter mantiene la
+        // mirada viva — como un gato que escanea pequeños detalles
+        // dentro del cuadrante donde quedó fijada la atención.
         const maxX = r.width * 0.075;
         const maxY = r.height * 0.105;
-        targetX = prowlTarget.x * maxX;
-        targetY = prowlTarget.y * maxY;
+        const microX = Math.sin(now / 870) * 0.09 + Math.sin(now / 430) * 0.04;
+        const microY = Math.sin(now / 1190) * 0.07 + Math.cos(now / 510) * 0.03;
+        targetX = (prowlTarget.x + microX) * maxX;
+        targetY = (prowlTarget.y + microY) * maxY;
       }
 
       let state = irisState.get(iris);

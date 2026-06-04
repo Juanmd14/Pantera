@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import Eyes from "./components/Eyes";
+import InstagramIcon from "./components/InstagramIcon";
 import Placeholder from "./components/Placeholder";
 import Reveal from "./components/Reveal";
+import WhatsappIcon from "./components/WhatsappIcon";
 import { formatPrice, getProduct } from "@/lib/products";
 import styles from "./home.module.css";
 
@@ -112,7 +114,7 @@ export default function HomePage() {
         </section>
       </Reveal>
 
-      {/* Firma — logo de la marca */}
+      {/* Firma — logo + contacto */}
       <Reveal>
         <section className={styles.sign}>
           <Image
@@ -124,6 +126,29 @@ export default function HomePage() {
             sizes="(max-width: 480px) 220px, (max-width: 900px) 320px, 420px"
           />
           <div className={`mono ${styles.signLine}`}>COLECCIÓN SOMBRA</div>
+
+          <div className={styles.signSocial}>
+            <a
+              href="https://wa.me/5492392547906"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.signLink}
+              aria-label="Escribinos por WhatsApp"
+            >
+              <WhatsappIcon size={16} />
+              <span>+54 9 2392 547906</span>
+            </a>
+            <a
+              href="https://instagram.com/pantera.america"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.signLink}
+              aria-label="Pantera en Instagram"
+            >
+              <InstagramIcon size={16} />
+              <span>@pantera.america</span>
+            </a>
+          </div>
         </section>
       </Reveal>
     </>
