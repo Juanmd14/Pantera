@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Placeholder from "./Placeholder";
 import Reveal from "./Reveal";
+import { formatPrice } from "@/lib/products";
 import type { Product } from "@/lib/types";
 import styles from "./EditorialRow.module.css";
 
@@ -34,7 +35,7 @@ export default function EditorialRow({ product, right = false }: Props) {
       <h2 className={`display ${styles.title}`}>{product.name}</h2>
       <p className={styles.desc}>{product.description}</p>
       <div className={`mono lbl-dim ${styles.material}`}>{product.material}</div>
-      <div className={`price ${styles.price}`}>€ {product.price}</div>
+      <div className={`price ${styles.price}`}>{formatPrice(product.price)}</div>
     </div>
   );
 

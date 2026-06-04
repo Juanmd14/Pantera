@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { formatPrice } from "@/lib/products";
 import styles from "./StickyCta.module.css";
 
 type Props = {
@@ -30,7 +31,7 @@ export default function StickyCta({ price, label = "Añadir a la bolsa" }: Props
         className={`${styles.bar} ${stuck ? styles.barShow : ""}`}
         aria-hidden={!stuck}
       >
-        <div className={`price ${styles.price}`}>€ {price}</div>
+        <div className={`price ${styles.price}`}>{formatPrice(price)}</div>
         <button type="button" className={`btn solid ${styles.cta}`}>
           {label}
         </button>

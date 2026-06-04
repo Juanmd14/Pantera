@@ -4,13 +4,13 @@ import Placeholder from "../../components/Placeholder";
 import SizeChips from "../../components/SizeChips";
 import Accordion from "../../components/Accordion";
 import StickyCta from "../../components/StickyCta";
-import { getProduct, getRelated, products } from "@/lib/products";
+import { formatPrice, getProduct, getRelated, visibleProducts } from "@/lib/products";
 import styles from "./producto.module.css";
 
 type Params = { slug: string };
 
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return visibleProducts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
@@ -76,7 +76,7 @@ export default async function ProductoPage({
           </h1>
           <p className={styles.desc}>{product.description}</p>
 
-          <div className={`price ${styles.price}`}>€ {product.price}</div>
+          <div className={`price ${styles.price}`}>{formatPrice(product.price)}</div>
 
           <div className={`lbl lbl-dim ${styles.sizeLbl}`}>Talle</div>
           <div className={styles.chipsWrap}>
@@ -126,7 +126,7 @@ export default async function ProductoPage({
               />
               <div className={styles.relatedRow}>
                 <span className={styles.relatedName}>{p.name}</span>
-                <span className={`price ${styles.relatedPrice}`}>€ {p.price}</span>
+                <span className={`price ${styles.relatedPrice}`}>{formatPrice(p.price)}</span>
               </div>
             </Link>
           ))}

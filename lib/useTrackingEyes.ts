@@ -3,11 +3,14 @@
 /**
  * useTrackingEyes — la firma de marca de Pantera.
  *
- * Los ojos ámbar acechan desde la oscuridad. Tracking con inercia (lag
- * felino), prowl cuando el usuario queda quieto, parpadeo variado
- * (snap, double, slow). En mobile sigue el dedo y deambula entre
- * toques. `prefers-reduced-motion` apaga prowl y blink; el tracking
- * por cursor se mantiene (es respuesta directa del usuario).
+ * Coreografía de entrada (el animal se presenta):
+ *   0–1000 ms : ojos fijos al centro, calma absoluta.
+ *   1000 ms   : slow-blink — la primera mirada.
+ *   1000–3500 : merodeo forzado (ignora el cursor) — el acecho de marca.
+ *   3500+     : tracking del cursor + prowl idle + blink variado normal.
+ *
+ * `prefers-reduced-motion` apaga prowl y blink; el tracking por cursor
+ * se mantiene (es respuesta directa del usuario).
  */
 
 import { useEffect, useRef } from "react";
@@ -17,7 +20,10 @@ type IrisEl = HTMLElement;
 const registry = new Set<IrisEl>();
 const irisState = new WeakMap<IrisEl, { x: number; y: number }>();
 let started = false;
-let blinkTimer: ReturnType<typeof setTimeout> | null = null;
+let mountTime = 0;
+
+const INTRO_CALM_MS = 1000;
+const INTRO_PROWL_END_MS = 3500;
 
 const pointer = {
   x: 0,
@@ -47,8 +53,13 @@ function onTouchMove(e: TouchEvent) {
 function frame() {
   if (registry.size > 0) {
     const now = performance.now();
+    const sinceMount = now - mountTime;
     const tNow = Date.now() / 2600;
-    const pointerActive = now - pointer.last < 1400;
+
+    const inCalm = sinceMount < INTRO_CALM_MS;
+    const inIntroProwl = !inCalm && sinceMount < INTRO_PROWL_END_MS;
+    const pointerActive =
+      !inCalm && !inIntroProwl && now - pointer.last < 1400;
 
     registry.forEach((iris) => {
       const eye = iris.parentElement;
@@ -58,33 +69,29 @@ function frame() {
 
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
-      let targetX: number;
-      let targetY: number;
+      let targetX = 0;
+      let targetY = 0;
 
-      if (pointerActive) {
-        // sigue el cursor con fijación predadora: cerca = más amplitud,
-        // lejos = más sutil. Un acecho, no un robot reactivo.
+      if (inCalm) {
+        // Calma absoluta: ojos centrados, esperando entrar en escena.
+        targetX = 0;
+        targetY = 0;
+      } else if (pointerActive) {
         const dx = pointer.x - cx;
         const dy = pointer.y - cy;
         const d = Math.hypot(dx, dy) || 1;
         const maxX = r.width * 0.06;
         const maxY = r.height * 0.085;
-        // 0..1: 1 = cursor pegado, 0 = lejos. Fija más cuando está cerca.
         const focus = 1 - Math.min(1, d / 600);
         const intensity = 0.55 + focus * 0.45;
         targetX = (dx / d) * maxX * intensity;
         targetY = (dy / d) * maxY * intensity;
       } else if (!prefersReduced) {
-        // merodea (autónomo) — oscilación lenta entre dos frecuencias
+        // Merodeo: forzado durante el intro, libre cuando el cursor descansa.
         targetX = Math.cos(tNow) * r.width * 0.025;
         targetY = Math.sin(tNow * 1.3) * r.height * 0.035;
-      } else {
-        targetX = 0;
-        targetY = 0;
       }
 
-      // inercia: el iris persigue el target con lerp. Da el "lag" felino
-      // — no salta a la presa, la sigue.
       let state = irisState.get(iris);
       if (!state) {
         state = { x: targetX, y: targetY };
@@ -111,14 +118,14 @@ function blinkAllOnce(durationMs: number) {
 
 function scheduleBlink() {
   const delay = 2800 + Math.random() * 4400;
-  blinkTimer = setTimeout(() => {
+  setTimeout(() => {
     const variant = Math.random();
     if (variant < 0.22) {
       // double-blink: dos parpadeos rápidos seguidos (tic felino)
       blinkAllOnce(110);
       setTimeout(() => blinkAllOnce(110), 220);
     } else if (variant < 0.45) {
-      // slow-blink: entrecerrar lento — el "cariño felino"
+      // slow-blink: entrecerrar lento
       blinkAllOnce(280);
     } else {
       // snap-blink: el habitual
@@ -128,9 +135,20 @@ function scheduleBlink() {
   }, delay);
 }
 
+function runIntro() {
+  // Mirada de presentación: slow blink al filo del segundo.
+  setTimeout(() => {
+    blinkAllOnce(320);
+    // Después de la presentación + merodeo forzado, arranca el ciclo normal.
+    const remaining = Math.max(0, INTRO_PROWL_END_MS - INTRO_CALM_MS - 200);
+    setTimeout(scheduleBlink, remaining + 600);
+  }, INTRO_CALM_MS);
+}
+
 function ensureLoopStarted() {
   if (started || typeof window === "undefined") return;
   started = true;
+  mountTime = performance.now();
 
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
   prefersReduced = mq.matches;
@@ -147,7 +165,7 @@ function ensureLoopStarted() {
   requestAnimationFrame(frame);
 
   if (!prefersReduced) {
-    setTimeout(scheduleBlink, 2200);
+    runIntro();
   }
 }
 

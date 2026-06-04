@@ -22,16 +22,16 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#14110C",
+  themeColor: "#0B0C0E",
 };
 
 export const metadata: Metadata = {
-  title: "Pantera — Elegancia oscura en movimiento · FW26 Sombra",
+  title: "Pantera — Elegancia oscura en movimiento · Colección Sombra",
   description:
-    "No es una tienda. Es el territorio del animal. Pantera FW26 — Sombra. Buenos Aires / Milano.",
+    "No es una tienda. Es el territorio del animal. Pantera — Colección Sombra. América, Rivadavia · Buenos Aires.",
   openGraph: {
     type: "website",
-    title: "Pantera — FW26 Sombra",
+    title: "Pantera — Colección Sombra",
     description: "Elegancia oscura en movimiento.",
     siteName: "Pantera",
     locale: "es_AR",

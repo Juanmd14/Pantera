@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="hr" />
       <footer className={styles.foot}>
         <BrandMark size="footer" />
-        <span className={`mono ${styles.copy}`}>© 2026 — BUENOS AIRES / MILANO</span>
+        <span className={`mono ${styles.copy}`}>© 2026 — AMÉRICA · RIVADAVIA · BUENOS AIRES</span>
       </footer>
     </>
   );

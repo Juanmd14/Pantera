@@ -21,7 +21,7 @@ export default function HomePage() {
 
           <p className={styles.tagline}>
             Elegancia oscura en movimiento.{" "}
-            <span className={styles.taglineAccent}>FW26 — Sombra.</span>
+            <span className={styles.taglineAccent}>Sombra.</span>
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export default function HomePage() {
             height={720}
             className={styles.campaignImg}
             src="/images/modelos1.jpg"
-            alt="Campaña FW26 — dos figuras en el callejón"
+            alt="Campaña Sombra — dos figuras en el callejón"
             sizes="100vw"
             priority
           >
@@ -50,7 +50,7 @@ export default function HomePage() {
             <div className={`mono ${styles.campaignRight}`}>
               MERINO / SHADOW
               <br />
-              <span className={styles.priceAmber}>€ 690</span>
+              <span className={styles.priceAmber}>$30.000</span>
             </div>
           </Placeholder>
         </section>
@@ -78,7 +78,7 @@ export default function HomePage() {
             className={styles.signMark}
             sizes="(max-width: 480px) 220px, (max-width: 900px) 320px, 420px"
           />
-          <div className={`mono ${styles.signLine}`}>FW26 · SOMBRA</div>
+          <div className={`mono ${styles.signLine}`}>COLECCIÓN SOMBRA</div>
         </section>
       </Reveal>
     </>
