@@ -5,11 +5,18 @@
  *
  * Coreografía de entrada (el animal se presenta):
  *   0–1000 ms : ojos fijos al centro, calma absoluta.
- *   1000 ms   : slow-blink — la primera mirada.
- *   1000–3500 : merodeo forzado (ignora el cursor) — el acecho de marca.
- *   3500+     : tracking del cursor + prowl idle + blink variado normal.
+ *   1000 ms   : blink corto — la primera mirada.
+ *   1330 ms   : entrecerrar mantenido (~720 ms con hold).
+ *   2060 ms   : segundo blink.
+ *   2400 ms   : ciclo normal de blinks variados.
  *
- * `prefers-reduced-motion` apaga prowl y blink; el tracking por cursor
+ * Durante 1000–3500 ms los ojos merodean ignorando el cursor (intro window).
+ * Después: tracking del cursor + prowl idle + blink variado.
+ *
+ * Los blinks viajan por keyframes CSS asimétricos (cierre rápido, apertura
+ * lenta) disparados con class-toggle. El cleanup se hace en `animationend`.
+ *
+ * `prefers-reduced-motion` apaga blinks y prowl. El tracking por cursor
  * se mantiene (es respuesta directa del usuario).
  */
 
@@ -24,6 +31,9 @@ let mountTime = 0;
 
 const INTRO_CALM_MS = 1000;
 const INTRO_PROWL_END_MS = 3500;
+
+const BLINK_CLASSES = ["blinkSnap", "blinkSlow", "halfClose", "doubleBlink"] as const;
+type BlinkClass = (typeof BLINK_CLASSES)[number];
 
 const pointer = {
   x: 0,
@@ -73,7 +83,6 @@ function frame() {
       let targetY = 0;
 
       if (inCalm) {
-        // Calma absoluta: ojos centrados, esperando entrar en escena.
         targetX = 0;
         targetY = 0;
       } else if (pointerActive) {
@@ -87,7 +96,6 @@ function frame() {
         targetX = (dx / d) * maxX * intensity;
         targetY = (dy / d) * maxY * intensity;
       } else if (!prefersReduced) {
-        // Merodeo: forzado durante el intro, libre cuando el cursor descansa.
         targetX = Math.cos(tNow) * r.width * 0.025;
         targetY = Math.sin(tNow * 1.3) * r.height * 0.035;
       }
@@ -107,21 +115,17 @@ function frame() {
   requestAnimationFrame(frame);
 }
 
-function blinkAllOnce(durationMs: number) {
+function applyBlink(name: BlinkClass) {
   document.querySelectorAll<HTMLElement>("[data-eye]").forEach((eye) => {
-    eye.style.transform = "scaleY(0.06)";
-    setTimeout(() => {
-      eye.style.transform = "";
-    }, durationMs);
-  });
-}
-
-function halfCloseAllOnce(durationMs: number) {
-  document.querySelectorAll<HTMLElement>("[data-eye]").forEach((eye) => {
-    eye.style.transform = "scaleY(0.42)";
-    setTimeout(() => {
-      eye.style.transform = "";
-    }, durationMs);
+    BLINK_CLASSES.forEach((c) => eye.classList.remove(c));
+    // reflow para reiniciar la animación si el ojo viene de otro estado
+    void eye.offsetWidth;
+    eye.classList.add(name);
+    const onEnd = () => {
+      eye.classList.remove(name);
+      eye.removeEventListener("animationend", onEnd);
+    };
+    eye.addEventListener("animationend", onEnd);
   });
 }
 
@@ -129,34 +133,18 @@ function scheduleBlink() {
   const delay = 2800 + Math.random() * 4400;
   setTimeout(() => {
     const variant = Math.random();
-    if (variant < 0.22) {
-      // double-blink: dos parpadeos rápidos seguidos (tic felino)
-      blinkAllOnce(110);
-      setTimeout(() => blinkAllOnce(110), 220);
-    } else if (variant < 0.45) {
-      // slow-blink: entrecerrar lento
-      blinkAllOnce(280);
-    } else {
-      // snap-blink: el habitual
-      blinkAllOnce(120);
-    }
+    if (variant < 0.22)      applyBlink("doubleBlink");
+    else if (variant < 0.45) applyBlink("blinkSlow");
+    else                     applyBlink("blinkSnap");
     scheduleBlink();
   }, delay);
 }
 
 function runIntro() {
-  // Coreografía de presentación: pestañea, entrecierra, abre, pestañea
-  // y queda lista para merodear. Cada paso encadena con el siguiente.
-  setTimeout(() => {
-    blinkAllOnce(150);                            // 1000ms: primer parpadeo
-    setTimeout(() => {
-      halfCloseAllOnce(520);                      // 1330ms: entrecerrar lento
-      setTimeout(() => {
-        blinkAllOnce(140);                        // 2030ms: parpadeo final
-        setTimeout(scheduleBlink, 260);           // ~2300ms: ciclo normal
-      }, 700);
-    }, 330);
-  }, INTRO_CALM_MS);
+  setTimeout(() => applyBlink("blinkSnap"), INTRO_CALM_MS);          // 1000ms
+  setTimeout(() => applyBlink("halfClose"), INTRO_CALM_MS + 330);    // 1330ms
+  setTimeout(() => applyBlink("blinkSnap"), INTRO_CALM_MS + 1060);   // 2060ms
+  setTimeout(scheduleBlink, INTRO_CALM_MS + 1400);                   // 2400ms
 }
 
 function ensureLoopStarted() {

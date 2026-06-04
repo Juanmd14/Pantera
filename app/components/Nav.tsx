@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandMark from "./BrandMark";
+import PawIcon from "./PawIcon";
+import SearchOverlay from "./SearchOverlay";
 import styles from "./Nav.module.css";
 
 const LINKS: { href: string; label: string; amber?: boolean }[] = [
@@ -15,10 +17,12 @@ const LINKS: { href: string; label: string; amber?: boolean }[] = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     setOpen(false);
+    setSearchOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -55,9 +59,20 @@ export default function Nav() {
         </div>
 
         <div className={styles.icons}>
-          <span className={styles.search}>Buscar</span>
           <span className={styles.cart}>Bolsa · 0</span>
         </div>
+
+        <button
+          type="button"
+          className={styles.searchBtn}
+          aria-label="Buscar"
+          onClick={() => {
+            setOpen(false);
+            setSearchOpen(true);
+          }}
+        >
+          <PawIcon size={20} />
+        </button>
 
         <button
           type="button"
@@ -104,10 +119,11 @@ export default function Nav() {
         </ul>
 
         <div className={styles.overlayFoot}>
-          <span className="mono">Buscar</span>
           <span className="mono">Bolsa · 0</span>
         </div>
       </div>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

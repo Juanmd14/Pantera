@@ -44,6 +44,27 @@
   letter-spacing: 0.04em;
 }
 
+/* ── Botón Pata (Buscar) ────────────────────────────────── */
+
+.searchBtn {
+  background: transparent;
+  border: 0;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-dim);
+  cursor: pointer;
+  transition: color 220ms ease,
+              transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .searchBtn:hover { color: var(--amber); transform: scale(1.1); }
+}
+
+.searchBtn:active { transform: scale(0.94); }
+
 /* ── Mobile trigger ─────────────────────────────────────── */
 
 .trigger {
@@ -153,7 +174,6 @@
 @media (max-width: 900px) {
   .menu { gap: 22px; }
   .menu a { font-size: 12px; }
-  .icons .search { display: none; }
   .icons { gap: 16px; }
 }
 

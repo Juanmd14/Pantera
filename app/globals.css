@@ -177,8 +177,39 @@ button { font-family: inherit; }
   place-items: center;
   overflow: hidden;
   transform-origin: 50% 50%;
-  transition: transform 120ms ease;
 }
+
+@keyframes panteraBlinkSnap {
+  0%   { transform: scaleY(1); }
+  38%  { transform: scaleY(0.06); }
+  52%  { transform: scaleY(0.06); }
+  100% { transform: scaleY(1); }
+}
+@keyframes panteraBlinkSlow {
+  0%   { transform: scaleY(1); }
+  30%  { transform: scaleY(0.06); }
+  58%  { transform: scaleY(0.06); }
+  100% { transform: scaleY(1); }
+}
+@keyframes panteraHalfClose {
+  0%   { transform: scaleY(1); }
+  28%  { transform: scaleY(0.42); }
+  70%  { transform: scaleY(0.42); }
+  100% { transform: scaleY(1); }
+}
+@keyframes panteraDoubleBlink {
+  0%   { transform: scaleY(1); }
+  14%  { transform: scaleY(0.06); }
+  24%  { transform: scaleY(1); }
+  44%  { transform: scaleY(0.06); }
+  56%  { transform: scaleY(1); }
+  100% { transform: scaleY(1); }
+}
+
+.eye.blinkSnap   { animation: panteraBlinkSnap   320ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.eye.blinkSlow   { animation: panteraBlinkSlow   520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.eye.halfClose   { animation: panteraHalfClose   720ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.eye.doubleBlink { animation: panteraDoubleBlink 520ms cubic-bezier(0.33, 1, 0.68, 1) both; }
 
 .iris {
   position: relative;

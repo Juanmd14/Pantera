@@ -34,6 +34,7 @@
 
 .kicker {
   margin-bottom: 58px;
+  letter-spacing: 0.32em;
 }
 
 .eyesHero {
@@ -55,8 +56,9 @@
   margin-top: 38px;
   color: var(--amber);
   font-size: 17px;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   font-weight: 300;
+  opacity: 0.92;
 }
 
 .scrollCue {
