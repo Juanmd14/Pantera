@@ -64,7 +64,7 @@ export default function CartDrawer() {
           <>
             <ul className={styles.list}>
               {lines.map((line) => (
-                <li key={line.slug} className={styles.item}>
+                <li key={line.id} className={styles.item}>
                   <div className={styles.itemImg}>
                     {line.image && (
                       <Image
@@ -81,6 +81,11 @@ export default function CartDrawer() {
                     <span className={`display ${styles.itemName}`}>
                       {line.name}
                     </span>
+                    {line.size && (
+                      <span className={`mono ${styles.itemSize}`}>
+                        Talle {line.size}
+                      </span>
+                    )}
                     <span className={`price ${styles.itemPrice}`}>
                       {formatPrice(line.price)}
                     </span>
@@ -90,7 +95,7 @@ export default function CartDrawer() {
                         <button
                           type="button"
                           aria-label={`Quitar una unidad de ${line.name}`}
-                          onClick={() => setQty(line.slug, line.qty - 1)}
+                          onClick={() => setQty(line.id, line.qty - 1)}
                         >
                           −
                         </button>
@@ -98,7 +103,7 @@ export default function CartDrawer() {
                         <button
                           type="button"
                           aria-label={`Agregar una unidad de ${line.name}`}
-                          onClick={() => setQty(line.slug, line.qty + 1)}
+                          onClick={() => setQty(line.id, line.qty + 1)}
                         >
                           +
                         </button>
@@ -106,7 +111,7 @@ export default function CartDrawer() {
                       <button
                         type="button"
                         className={styles.removeBtn}
-                        onClick={() => remove(line.slug)}
+                        onClick={() => remove(line.id)}
                       >
                         Quitar
                       </button>

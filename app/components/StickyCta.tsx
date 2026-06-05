@@ -8,12 +8,14 @@ import styles from "./StickyCta.module.css";
 type Props = {
   price: number;
   slug: string;
+  size?: string;
   label?: string;
 };
 
 export default function StickyCta({
   price,
   slug,
+  size,
   label = "Añadir a la bolsa",
 }: Props) {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -42,7 +44,7 @@ export default function StickyCta({
         <button
           type="button"
           className={`btn solid ${styles.cta}`}
-          onClick={() => add(slug)}
+          onClick={() => add(slug, { size })}
         >
           {label}
         </button>

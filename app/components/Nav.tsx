@@ -11,9 +11,8 @@ import { useCart } from "@/lib/cart";
 import styles from "./Nav.module.css";
 
 const LINKS: { href: string; label: string; amber?: boolean }[] = [
+  { href: "/", label: "Inicio" },
   { href: "/coleccion", label: "Colección" },
-  { href: "/coleccion", label: "Historia" },
-  { href: "/coleccion", label: "Atelier" },
   { href: "/coleccion", label: "Tienda", amber: true },
 ];
 

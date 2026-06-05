@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import styles from "./SizeChips.module.css";
 
 type Props = {
   sizes: string[];
-  defaultSize?: string;
+  value: string | null;
+  onChange: (size: string) => void;
 };
 
-export default function SizeChips({ sizes, defaultSize }: Props) {
-  const [active, setActive] = useState<string | null>(defaultSize ?? null);
-
+export default function SizeChips({ sizes, value, onChange }: Props) {
   return (
     <div className={styles.row} role="radiogroup" aria-label="Talle">
       {sizes.map((s) => (
@@ -18,9 +16,9 @@ export default function SizeChips({ sizes, defaultSize }: Props) {
           key={s}
           type="button"
           role="radio"
-          aria-checked={active === s}
-          className={`chip ${active === s ? "on" : ""}`}
-          onClick={() => setActive(s)}
+          aria-checked={value === s}
+          className={`chip ${value === s ? "on" : ""}`}
+          onClick={() => onChange(s)}
         >
           {s}
         </button>

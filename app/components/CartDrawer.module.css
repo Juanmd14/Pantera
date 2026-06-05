@@ -128,6 +128,13 @@
   line-height: 0.95;
 }
 
+.itemSize {
+  color: var(--fg-mute);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 .itemPrice {
   font-size: 13px;
   letter-spacing: 0.06em;

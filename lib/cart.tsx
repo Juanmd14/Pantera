@@ -10,10 +10,12 @@ import {
 } from "react";
 import { getProduct } from "./products";
 
-type CartItem = { slug: string; qty: number };
+type CartItem = { slug: string; size?: string; qty: number };
 
 export type CartLine = {
+  id: string;
   slug: string;
+  size?: string;
   qty: number;
   name: string;
   price: number;
@@ -28,13 +30,16 @@ type CartContextValue = {
   total: number;
   open: boolean;
   setOpen: (open: boolean) => void;
-  add: (slug: string, qty?: number) => void;
-  remove: (slug: string) => void;
-  setQty: (slug: string, qty: number) => void;
+  add: (slug: string, opts?: { size?: string; qty?: number }) => void;
+  remove: (id: string) => void;
+  setQty: (id: string, qty: number) => void;
   clear: () => void;
 };
 
 const STORAGE_KEY = "pantera_cart";
+
+// Identidad de línea: una misma prenda en distintos talles son líneas distintas.
+const lineId = (slug: string, size?: string) => `${slug}__${size ?? ""}`;
 
 const CartContext = createContext<CartContextValue | null>(null);
 
@@ -70,29 +75,38 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, hydrated]);
 
-  const add = useCallback((slug: string, qty = 1) => {
-    if (!getProduct(slug)) return;
-    setItems((prev) => {
-      const found = prev.find((it) => it.slug === slug);
-      if (found) {
-        return prev.map((it) =>
-          it.slug === slug ? { ...it, qty: it.qty + qty } : it
-        );
-      }
-      return [...prev, { slug, qty }];
-    });
-    setOpen(true);
+  const add = useCallback(
+    (slug: string, opts?: { size?: string; qty?: number }) => {
+      if (!getProduct(slug)) return;
+      const size = opts?.size;
+      const qty = opts?.qty ?? 1;
+      setItems((prev) => {
+        const found = prev.find((it) => it.slug === slug && it.size === size);
+        if (found) {
+          return prev.map((it) =>
+            it.slug === slug && it.size === size
+              ? { ...it, qty: it.qty + qty }
+              : it
+          );
+        }
+        return [...prev, { slug, size, qty }];
+      });
+      setOpen(true);
+    },
+    []
+  );
+
+  const remove = useCallback((id: string) => {
+    setItems((prev) => prev.filter((it) => lineId(it.slug, it.size) !== id));
   }, []);
 
-  const remove = useCallback((slug: string) => {
-    setItems((prev) => prev.filter((it) => it.slug !== slug));
-  }, []);
-
-  const setQty = useCallback((slug: string, qty: number) => {
+  const setQty = useCallback((id: string, qty: number) => {
     setItems((prev) =>
       qty <= 0
-        ? prev.filter((it) => it.slug !== slug)
-        : prev.map((it) => (it.slug === slug ? { ...it, qty } : it))
+        ? prev.filter((it) => lineId(it.slug, it.size) !== id)
+        : prev.map((it) =>
+            lineId(it.slug, it.size) === id ? { ...it, qty } : it
+          )
     );
   }, []);
 
@@ -104,7 +118,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (!product) return [];
       return [
         {
+          id: lineId(it.slug, it.size),
           slug: it.slug,
+          size: it.size,
           qty: it.qty,
           name: product.name,
           price: product.price,

@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Placeholder from "../../components/Placeholder";
-import SizeChips from "../../components/SizeChips";
 import Accordion from "../../components/Accordion";
-import StickyCta from "../../components/StickyCta";
-import AddToBag from "../../components/AddToBag";
-import { formatPrice, getProduct, getRelated, visibleProducts } from "@/lib/products";
+import BuyPanel from "../../components/BuyPanel";
+import {
+  formatPrice,
+  getCollection,
+  getProduct,
+  getRelated,
+  visibleProducts,
+} from "@/lib/products";
 import styles from "./producto.module.css";
 
 type Params = { slug: string };
@@ -66,7 +70,9 @@ export default async function ProductoPage({
 
         {/* Columna derecha: info + chips + CTA + acordeón */}
         <div className={styles.right}>
-          <div className="lbl">Look {product.look} — Sombra</div>
+          <div className="lbl">
+            Look {product.look} — {getCollection(product.collection)?.name ?? ""}
+          </div>
           <h1 className={`display ${styles.title}`}>
             {shortLines.map((line, i) => (
               <span key={i}>
@@ -79,14 +85,15 @@ export default async function ProductoPage({
 
           <div className={`price ${styles.price}`}>{formatPrice(product.price)}</div>
 
-          <div className={`lbl lbl-dim ${styles.sizeLbl}`}>Talle</div>
-          <div className={styles.chipsWrap}>
-            <SizeChips sizes={["XS", "S", "M", "L", "XL"]} defaultSize="S" />
-          </div>
-
-          <AddToBag slug={product.slug} className={styles.cta} />
-
-          <StickyCta price={product.price} slug={product.slug} />
+          <BuyPanel
+            slug={product.slug}
+            price={product.price}
+            sizes={["XS", "S", "M", "L", "XL"]}
+            defaultSize="S"
+            sizeLblClassName={styles.sizeLbl}
+            chipsWrapClassName={styles.chipsWrap}
+            ctaClassName={styles.cta}
+          />
 
           <div className={styles.accGroup}>
             <Accordion title="Materiales y cuidado">

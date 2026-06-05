@@ -199,7 +199,11 @@ export function getProduct(slug: string): Product | undefined {
 }
 
 export function getRelated(slug: string): Product[] {
-  return visibleProducts.filter((p) => p.slug !== slug);
+  const current = getProduct(slug);
+  if (!current) return [];
+  return visibleProducts.filter(
+    (p) => p.slug !== slug && p.collection === current.collection
+  );
 }
 
 export function formatPrice(value: number): string {
