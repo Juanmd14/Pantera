@@ -4,80 +4,106 @@
   left: 0;
   right: 0;
   z-index: 50;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  padding: 26px var(--pad-x);
+  padding: 18px var(--pad-x);
   height: var(--nav-h);
   background: linear-gradient(180deg, rgba(11, 12, 14, 0.85), rgba(11, 12, 14, 0));
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
 
+.left {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+}
+
 .brandLink {
   display: inline-flex;
   align-items: center;
+  justify-self: center;
   text-decoration: none;
 }
 
-/* ── Botón Pata (Buscar) ────────────────────────────────── */
-
-.rightCluster {
+.right {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  justify-self: end;
+  gap: 6px;
 }
 
-.searchBtn {
+/* ── Icon button base (paw, hamburger, cart) ─────────────── */
+
+.iconBtn {
   background: transparent;
   border: 0;
-  padding: 6px 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--amber);
+  width: 44px;
+  height: 44px;
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+  color: var(--fg);
   cursor: pointer;
+  border-radius: 2px;
   transition: color 220ms ease,
               transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.searchLabel {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  line-height: 1;
+@media (hover: hover) {
+  .iconBtn:hover { color: var(--amber); }
+}
+
+.iconBtn:active { transform: scale(0.92); }
+
+/* ── Botón Pata (Buscar) ────────────────────────────────── */
+
+.searchBtn {
+  color: var(--amber);
 }
 
 @media (hover: hover) {
-  .searchBtn:hover { color: var(--amber-glow); transform: scale(1.06); }
+  .searchBtn:hover {
+    color: var(--amber-glow);
+    transform: scale(1.08);
+  }
 }
 
-.searchBtn:active { transform: scale(0.94); }
+.searchBtn:active { transform: scale(0.92); }
 
-/* ── Botón Bolsa ────────────────────────────────────────── */
+/* ── Botón Bolsa (con imagen pantera-cart) ───────────────── */
 
 .bagBtn {
-  background: transparent;
-  border: 0;
-  padding: 6px 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--fg);
-  cursor: pointer;
-  transition: color 220ms ease;
+  width: 48px;
+  height: 48px;
 }
 
-.bagLabel {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 12px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  line-height: 1;
+.bagIcon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  /* El PNG viene con fondo negro: `screen` deja pasar solo los píxeles
+     claros (la pantera + carrito amarillos), así el fondo negro se
+     vuelve transparente sobre la nav. */
+  mix-blend-mode: screen;
+  transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
+              filter 280ms ease;
 }
+
+@media (hover: hover) {
+  .bagBtn:hover .bagIcon {
+    transform: translateY(-1px) scale(1.06);
+    filter: drop-shadow(0 0 6px rgba(232, 170, 30, 0.4));
+  }
+}
+
+.bagBtn:active .bagIcon { transform: scale(0.94); }
 
 .bagCount {
+  position: absolute;
+  top: 2px;
+  right: 2px;
   display: inline-grid;
   place-items: center;
   min-width: 18px;
@@ -90,10 +116,7 @@
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
-}
-
-@media (hover: hover) {
-  .bagBtn:hover { color: var(--amber); }
+  box-shadow: 0 0 0 2px var(--ink);
 }
 
 .overlayBag {
@@ -104,7 +127,7 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 0;
+  padding: 8px 0;
   transition: color 200ms ease;
 }
 
@@ -112,22 +135,7 @@
   .overlayBag:hover { color: var(--amber); }
 }
 
-/* ── Menú trigger ─────────────────────────────────────── */
-
-.trigger {
-  display: inline-block;
-  background: transparent;
-  border: 0;
-  color: var(--fg);
-  font-family: var(--font-space-mono), monospace;
-  font-size: 12px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  padding: 8px 0;
-  cursor: pointer;
-}
-
-/* ── Overlay ─────────────────────────────────────────────── */
+/* ── Overlay (menú móvil/desktop) ─────────────────────────── */
 
 .overlay {
   position: fixed;
@@ -219,8 +227,9 @@
 /* ── Breakpoints ─────────────────────────────────────────── */
 
 @media (max-width: 480px) {
-  .rightCluster { gap: 10px; }
-  .searchLabel { display: none; }
+  .right { gap: 2px; }
+  .bagBtn { width: 44px; height: 44px; }
+  .bagIcon { width: 28px; height: 28px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

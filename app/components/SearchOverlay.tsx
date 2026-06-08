@@ -21,6 +21,8 @@ export default function SearchOverlay({ open, onClose }: Props) {
       const t = setTimeout(() => inputRef.current?.focus(), 140);
       return () => clearTimeout(t);
     }
+    // Sync con el estado externo `open`: limpiar query al cerrarse el overlay.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setQuery("");
   }, [open]);
 
@@ -81,7 +83,11 @@ export default function SearchOverlay({ open, onClose }: Props) {
       </div>
 
       <div className={styles.body}>
-        <div className={`mono ${styles.countLine}`}>
+        <div
+          className={`mono ${styles.countLine}`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {empty
             ? "0 resultados"
             : `${results.length} ${results.length === 1 ? "pieza" : "piezas"}`}

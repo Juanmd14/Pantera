@@ -1,4 +1,26 @@
-import type { Collection, Product } from "./types";
+import type { Collection, Product, ProductSize } from "./types";
+
+// Stock alto por defecto — las cifras reales se cargan cuando se integre
+// el manejo de inventario. Marcar un talle con stock 0 lo deshabilita en UI.
+const STANDARD_SIZES: ProductSize[] = [
+  { label: "XS", stock: 99 },
+  { label: "S", stock: 99 },
+  { label: "M", stock: 99 },
+  { label: "L", stock: 99 },
+  { label: "XL", stock: 99 },
+];
+
+const BOOT_SIZES: ProductSize[] = [
+  { label: "36", stock: 99 },
+  { label: "37", stock: 99 },
+  { label: "38", stock: 99 },
+  { label: "39", stock: 99 },
+  { label: "40", stock: 99 },
+  { label: "41", stock: 99 },
+];
+
+const cloneSizes = (sizes: ProductSize[]): ProductSize[] =>
+  sizes.map((s) => ({ ...s }));
 
 export const products: Product[] = [
   {
@@ -13,6 +35,7 @@ export const products: Product[] = [
     imageLabel: "LOOK 01 · 4:5",
     collection: "sombra",
     image: "/images/modelos1.jpg",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "set-campo",
@@ -26,6 +49,7 @@ export const products: Product[] = [
     imageLabel: "LOOK 02 · 4:5",
     collection: "campo",
     image: "/images/modelos3.jpg",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "chaqueta-piel-sombra",
@@ -39,6 +63,7 @@ export const products: Product[] = [
     imageLabel: "LOOK 03 · 4:5",
     collection: "sombra",
     image: "/images/modelos4.jpg",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "sudadera-bruma",
@@ -52,6 +77,7 @@ export const products: Product[] = [
     imageLabel: "LOOK 04 · 4:5",
     collection: "campo",
     image: "/images/ropa.jpg",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "gabardina-nocturna",
@@ -64,6 +90,7 @@ export const products: Product[] = [
     price: 27000,
     imageLabel: "LOOK 05 · 4:5",
     collection: "sombra",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "sueter-medianoche",
@@ -76,6 +103,7 @@ export const products: Product[] = [
     price: 19000,
     imageLabel: "LOOK 06 · 4:5",
     collection: "sombra",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "pantalon-caza",
@@ -88,6 +116,7 @@ export const products: Product[] = [
     price: 20000,
     imageLabel: "LOOK 07 · 4:5",
     collection: "campo",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "vestido-eclipse",
@@ -100,6 +129,7 @@ export const products: Product[] = [
     price: 24000,
     imageLabel: "LOOK 08 · 4:5",
     collection: "sombra",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "blazer-cazador",
@@ -112,6 +142,7 @@ export const products: Product[] = [
     price: 26000,
     imageLabel: "LOOK 09 · 4:5",
     collection: "sombra",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "camisa-acechante",
@@ -124,6 +155,7 @@ export const products: Product[] = [
     price: 16000,
     imageLabel: "LOOK 10 · 4:5",
     collection: "campo",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "falda-medianoche",
@@ -136,6 +168,7 @@ export const products: Product[] = [
     price: 21000,
     imageLabel: "LOOK 11 · 4:5",
     collection: "sombra",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "trench-niebla",
@@ -148,6 +181,7 @@ export const products: Product[] = [
     price: 27000,
     imageLabel: "LOOK 12 · 4:5",
     collection: "sombra",
+    sizes: cloneSizes(STANDARD_SIZES),
   },
   {
     slug: "botas-paso-mudo",
@@ -160,6 +194,7 @@ export const products: Product[] = [
     price: 25000,
     imageLabel: "LOOK 13 · 4:5",
     collection: "campo",
+    sizes: cloneSizes(BOOT_SIZES),
   },
 ];
 
@@ -208,4 +243,17 @@ export function getRelated(slug: string): Product[] {
 
 export function formatPrice(value: number): string {
   return `$${value.toLocaleString("es-AR")}`;
+}
+
+// ── Stock helpers ──────────────────────────────────────────────
+// Centralizan la lectura de stock por talle. El día que esta data venga
+// de un backend, solo cambia el origen — la UI consume estos helpers.
+
+export function isSoldOut(product: Product): boolean {
+  return product.sizes.every((s) => s.stock <= 0);
+}
+
+export function isSizeAvailable(product: Product, sizeLabel: string): boolean {
+  const s = product.sizes.find((s) => s.label === sizeLabel);
+  return Boolean(s && s.stock > 0);
 }

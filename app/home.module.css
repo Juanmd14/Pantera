@@ -326,6 +326,25 @@
     background: rgba(232, 170, 30, 0.05);
     transform: translateY(-2px);
   }
+
+  /* WhatsApp brand green */
+  .signLinkWhatsapp:hover {
+    color: #25d366;
+    border-color: #25d366;
+    background: rgba(37, 211, 102, 0.08);
+    box-shadow: 0 0 18px rgba(37, 211, 102, 0.18);
+  }
+
+  /* Instagram brand gradient — el borde toma el gradiente vía border-image
+     y el texto/ícono toman el rosa medio de la paleta. */
+  .signLinkInstagram:hover {
+    color: #e1306c;
+    border-color: transparent;
+    background:
+      linear-gradient(var(--ink), var(--ink)) padding-box,
+      linear-gradient(135deg, #feda77, #f58529, #dd2a7b, #8134af, #515bd4) border-box;
+    box-shadow: 0 0 18px rgba(225, 48, 108, 0.22);
+  }
 }
 
 @media (max-width: 480px) {

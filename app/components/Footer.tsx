@@ -11,7 +11,9 @@ export default function Footer() {
         <span className={`mono ${styles.location}`}>
           América · Rivadavia · Buenos Aires
         </span>
-        <span className={`mono ${styles.copy}`}>© 2026 — Estudio Pantera</span>
+        <span className={`mono ${styles.copy}`}>
+          © {new Date().getFullYear()} — Estudio Pantera
+        </span>
       </footer>
     </>
   );

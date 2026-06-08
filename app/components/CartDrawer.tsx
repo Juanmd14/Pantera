@@ -1,13 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useCart } from "@/lib/cart";
+import { buildWhatsappMessage, useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/products";
+import { whatsappUrl } from "@/lib/config";
+import WhatsappIcon from "./WhatsappIcon";
 import styles from "./CartDrawer.module.css";
 
 export default function CartDrawer() {
   const { open, setOpen, lines, count, total, setQty, remove } = useCart();
+  const [name, setName] = useState("");
+  const [zone, setZone] = useState("");
 
   // Body scroll lock + Escape mientras está abierto.
   useEffect(() => {
@@ -23,6 +27,9 @@ export default function CartDrawer() {
       window.removeEventListener("keydown", onKey);
     };
   }, [open, setOpen]);
+
+  const message = buildWhatsappMessage(lines, total, { name, zone });
+  const href = whatsappUrl(message);
 
   return (
     <div
@@ -128,8 +135,45 @@ export default function CartDrawer() {
                   {formatPrice(total)}
                 </span>
               </div>
+
+              <div className={styles.fields}>
+                <label className={styles.field}>
+                  <span className={`mono ${styles.fieldLbl}`}>Tu nombre · opcional</span>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Cómo te encontramos"
+                    className={styles.input}
+                    autoComplete="name"
+                    maxLength={60}
+                  />
+                </label>
+                <label className={styles.field}>
+                  <span className={`mono ${styles.fieldLbl}`}>Tu zona · opcional</span>
+                  <input
+                    type="text"
+                    value={zone}
+                    onChange={(e) => setZone(e.target.value)}
+                    placeholder="Ciudad o provincia"
+                    className={styles.input}
+                    autoComplete="address-level2"
+                    maxLength={80}
+                  />
+                </label>
+              </div>
+
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`btn solid ${styles.cta}`}
+              >
+                <WhatsappIcon size={16} />
+                <span>Coordinar por WhatsApp</span>
+              </a>
               <p className={styles.footNote}>
-                Coordinamos el pedido por WhatsApp.
+                Te respondemos para confirmar talles, envío y forma de pago.
               </p>
             </div>
           </>

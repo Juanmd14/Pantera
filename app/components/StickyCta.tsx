@@ -9,6 +9,7 @@ type Props = {
   price: number;
   slug: string;
   size?: string;
+  disabled?: boolean;
   label?: string;
 };
 
@@ -16,6 +17,7 @@ export default function StickyCta({
   price,
   slug,
   size,
+  disabled = false,
   label = "Añadir a la bolsa",
 }: Props) {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -33,6 +35,8 @@ export default function StickyCta({
     return () => io.disconnect();
   }, []);
 
+  const isDisabled = disabled || !size;
+
   return (
     <>
       <div ref={sentinelRef} aria-hidden className={styles.sentinel} />
@@ -44,9 +48,14 @@ export default function StickyCta({
         <button
           type="button"
           className={`btn solid ${styles.cta}`}
-          onClick={() => add(slug, { size })}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
+          onClick={() => {
+            if (isDisabled) return;
+            add(slug, { size });
+          }}
         >
-          {label}
+          {!size && !disabled ? "Elegí un talle" : label}
         </button>
       </div>
     </>

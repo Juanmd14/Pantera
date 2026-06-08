@@ -1,3 +1,8 @@
+export type ProductSize = {
+  label: string;
+  stock: number;
+};
+
 export type Product = {
   slug: string;
   look: string;
@@ -9,6 +14,7 @@ export type Product = {
   imageLabel: string;
   collection: string;
   image?: string;
+  sizes: ProductSize[];
 };
 
 export type Collection = {

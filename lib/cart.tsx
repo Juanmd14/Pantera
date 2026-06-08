@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { getProduct } from "./products";
+import { formatPrice, getProduct } from "./products";
 
 type CartItem = { slug: string; size?: string; qty: number };
 
@@ -55,7 +55,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as CartItem[];
         if (Array.isArray(parsed)) {
-          // Descartar slugs que ya no existen en el catálogo visible.
+          // Hidratación inicial desde localStorage (sistema externo).
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setItems(parsed.filter((it) => it && getProduct(it.slug) && it.qty > 0));
         }
       }
@@ -160,4 +161,38 @@ export function useCart(): CartContextValue {
   const ctx = useContext(CartContext);
   if (!ctx) throw new Error("useCart debe usarse dentro de <CartProvider>");
   return ctx;
+}
+
+// Arma el mensaje pre-cargado para WhatsApp con cada línea del carrito,
+// talle, cantidad, subtotal y total. Nombre / zona son opcionales y
+// aparecen como cabecera si vienen.
+export function buildWhatsappMessage(
+  lines: CartLine[],
+  total: number,
+  customer?: { name?: string; zone?: string }
+): string {
+  const name = customer?.name?.trim();
+  const zone = customer?.zone?.trim();
+
+  const header = ["Hola Pantera, me interesa coordinar este pedido."];
+  if (name || zone) {
+    const meta = [name && `Soy ${name}`, zone && `desde ${zone}`]
+      .filter(Boolean)
+      .join(" ");
+    if (meta) header.push(meta + ".");
+  }
+
+  const items = lines.map((l) => {
+    const size = l.size ? ` · Talle ${l.size}` : "";
+    const qty = l.qty > 1 ? ` × ${l.qty}` : "";
+    return `· ${l.name}${size}${qty} — ${formatPrice(l.lineTotal)}`;
+  });
+
+  return [
+    header.join(" "),
+    "",
+    ...items,
+    "",
+    `Total: ${formatPrice(total)}`,
+  ].join("\n");
 }

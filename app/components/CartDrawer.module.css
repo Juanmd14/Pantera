@@ -191,7 +191,9 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 4px 0;
+  padding: 12px 8px;
+  margin: -8px -8px;
+  min-height: 44px;
   transition: color 200ms ease;
 }
 
@@ -223,11 +225,55 @@
   letter-spacing: 0.04em;
 }
 
+.fields {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.fieldLbl {
+  color: var(--fg-mute);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--fg);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: 2px;
+  transition: border-color 200ms ease;
+}
+
+.input::placeholder {
+  color: var(--fg-mute);
+}
+
+.input:hover { border-color: rgba(255, 255, 255, 0.18); }
+.input:focus { outline: none; border-color: var(--amber); }
+
+.cta {
+  width: 100%;
+  margin-top: 16px;
+}
+
 .footNote {
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   color: var(--fg-mute);
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
+  text-align: center;
+  line-height: 1.5;
 }
 
 @media (prefers-reduced-motion: reduce) {

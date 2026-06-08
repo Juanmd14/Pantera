@@ -72,6 +72,18 @@ img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
 
+/* Foco visible para teclado — usa el ámbar de la paleta. */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+input:focus-visible,
+.chip:focus-visible {
+  outline-offset: 2px;
+}
+
 /* ──────────────────────────────────────────────────────────
    Tipografía utilitaria
    ────────────────────────────────────────────────────────── */
@@ -292,6 +304,13 @@ button { font-family: inherit; }
   }
 }
 
+.btn[disabled],
+.btn[aria-disabled="true"] {
+  opacity: 0.42;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .chip {
   font-family: var(--font-space-mono), monospace;
   font-size: 12px;
@@ -309,8 +328,19 @@ button { font-family: inherit; }
 }
 .chip.on { border-color: var(--amber); color: var(--amber); }
 
+.chip.out,
+.chip[disabled] {
+  opacity: 0.32;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  color: var(--fg-mute);
+}
+
 @media (hover: hover) {
-  .chip:hover { border-color: rgba(232, 170, 30, 0.45); color: var(--fg); }
+  .chip:hover:not([disabled]):not(.out) {
+    border-color: rgba(232, 170, 30, 0.45);
+    color: var(--fg);
+  }
 }
 
 /* ──────────────────────────────────────────────────────────
@@ -329,6 +359,17 @@ button { font-family: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1 !important; transform: none !important; }
+
+  /* Aplana animaciones y transiciones decorativas a duración casi nula.
+     Mantiene la lógica del cambio de estado, pero sin movimiento. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ──────────────────────────────────────────────────────────

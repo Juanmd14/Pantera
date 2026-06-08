@@ -11,6 +11,8 @@ export function useInView<T extends HTMLElement>(opts: { threshold?: number; onc
     if (!el) return;
 
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Sync con preferencia del SO: forzar visible sin animación de reveal.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInView(true);
       return;
     }

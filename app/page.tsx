@@ -6,6 +6,12 @@ import Placeholder from "./components/Placeholder";
 import Reveal from "./components/Reveal";
 import WhatsappIcon from "./components/WhatsappIcon";
 import { collections, getProductsByCollection } from "@/lib/products";
+import {
+  INSTAGRAM_HANDLE,
+  INSTAGRAM_URL,
+  WHATSAPP_DISPLAY,
+  whatsappUrl,
+} from "@/lib/config";
 import styles from "./home.module.css";
 
 export default function HomePage() {
@@ -112,24 +118,24 @@ export default function HomePage() {
 
           <div className={styles.signSocial}>
             <a
-              href="https://wa.me/5492392547906"
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.signLink}
+              className={`${styles.signLink} ${styles.signLinkWhatsapp}`}
               aria-label="Escribinos por WhatsApp"
             >
               <WhatsappIcon size={16} />
-              <span>+54 9 2392 547906</span>
+              <span>{WHATSAPP_DISPLAY}</span>
             </a>
             <a
-              href="https://instagram.com/pantera.america"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.signLink}
+              className={`${styles.signLink} ${styles.signLinkInstagram}`}
               aria-label="Pantera en Instagram"
             >
               <InstagramIcon size={16} />
-              <span>@pantera.america</span>
+              <span>@{INSTAGRAM_HANDLE}</span>
             </a>
           </div>
         </section>

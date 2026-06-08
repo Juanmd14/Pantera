@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import BrandMark from "./BrandMark";
+import HamburgerIcon from "./HamburgerIcon";
 import PawIcon from "./PawIcon";
 import SearchOverlay from "./SearchOverlay";
 import CartDrawer from "./CartDrawer";
@@ -23,6 +25,8 @@ export default function Nav() {
   const { count, setOpen: setCartOpen } = useCart();
 
   useEffect(() => {
+    // Sync con un sistema externo (router): cerrar overlays al cambiar de ruta.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOpen(false);
     setSearchOpen(false);
   }, [pathname]);
@@ -44,27 +48,39 @@ export default function Nav() {
   return (
     <>
       <nav className={styles.nav}>
+        <div className={styles.left}>
+          <button
+            type="button"
+            className={styles.iconBtn}
+            aria-label="Abrir menú"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen(true)}
+          >
+            <HamburgerIcon size={20} />
+          </button>
+        </div>
+
         <Link href="/" className={styles.brandLink} aria-label="Pantera — inicio">
           <BrandMark size="nav" />
         </Link>
 
-        <div className={styles.rightCluster}>
+        <div className={styles.right}>
           <button
             type="button"
-            className={styles.searchBtn}
+            className={`${styles.iconBtn} ${styles.searchBtn}`}
             aria-label="Buscar"
             onClick={() => {
               setOpen(false);
               setSearchOpen(true);
             }}
           >
-            <span className={styles.searchLabel}>Buscar</span>
-            <PawIcon size={20} />
+            <PawIcon size={22} />
           </button>
 
           <button
             type="button"
-            className={styles.bagBtn}
+            className={`${styles.iconBtn} ${styles.bagBtn}`}
             aria-label={`Abrir bolsa${count > 0 ? `, ${count} ítems` : ""}`}
             onClick={() => {
               setOpen(false);
@@ -72,19 +88,15 @@ export default function Nav() {
               setCartOpen(true);
             }}
           >
-            <span className={styles.bagLabel}>Bolsa</span>
+            <Image
+              src="/images/pantera-cart.png"
+              alt=""
+              width={32}
+              height={32}
+              className={styles.bagIcon}
+              priority
+            />
             {count > 0 && <span className={styles.bagCount}>{count}</span>}
-          </button>
-
-          <button
-            type="button"
-            className={styles.trigger}
-            aria-label="Abrir menú"
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen(true)}
-          >
-            Menú
           </button>
         </div>
       </nav>

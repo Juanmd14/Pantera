@@ -43,19 +43,8 @@ export default async function ProductoPage({
   return (
     <>
       <section className={styles.hero}>
-        {/* Columna izquierda: thumbs + imagen principal */}
+        {/* Columna izquierda: imagen principal */}
         <div className={styles.left}>
-          <div className={styles.thumbs}>
-            <Placeholder
-              className={`${styles.thumb} ${styles.thumbActive}`}
-              height={114}
-              src={product.image}
-              alt={`${product.name} — vista 1`}
-              sizes="84px"
-            />
-            <Placeholder className={styles.thumb} height={114} />
-            <Placeholder className={styles.thumb} height={114} />
-          </div>
           <Placeholder
             label="PRODUCTO · 4:5"
             lit
@@ -88,8 +77,7 @@ export default async function ProductoPage({
           <BuyPanel
             slug={product.slug}
             price={product.price}
-            sizes={["XS", "S", "M", "L", "XL"]}
-            defaultSize="S"
+            sizes={product.sizes}
             sizeLblClassName={styles.sizeLbl}
             chipsWrapClassName={styles.chipsWrap}
             ctaClassName={styles.cta}

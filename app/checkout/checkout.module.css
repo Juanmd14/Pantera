@@ -1,0 +1,43 @@
+.wrap {
+  min-height: calc(100vh - var(--nav-h) - var(--foot-h));
+  display: grid;
+  place-items: center;
+  padding: 96px var(--pad-x);
+}
+
+.inner {
+  max-width: 560px;
+  display: grid;
+  gap: 22px;
+  text-align: center;
+  justify-items: center;
+}
+
+.title {
+  font-size: clamp(40px, 7vw, 64px);
+  line-height: 0.92;
+  margin: 0;
+}
+
+.body {
+  color: var(--fg-dim);
+  line-height: 1.65;
+  margin: 0;
+  max-width: 44ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.hint {
+  color: var(--fg-mute);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
