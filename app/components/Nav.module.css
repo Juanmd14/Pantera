@@ -230,8 +230,8 @@
   .right { gap: 2px; }
   .bagBtn { width: 44px; height: 44px; }
   .bagIcon { width: 28px; height: 28px; }
-  .searchBtn { width: 44px; padding: 0; }
-  .searchLabel { display: none; }
+  .searchBtn { padding: 0 10px; }
+  .searchLabel { font-size: 10px; letter-spacing: 0.18em; }
 }
 
 @media (prefers-reduced-motion: reduce) {

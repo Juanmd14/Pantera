@@ -79,8 +79,9 @@ export default function Nav() {
             <Image
               src="/images/pantera-cart.png"
               alt=""
-              width={32}
-              height={32}
+              width={96}
+              height={96}
+              quality={100}
               className={styles.bagIcon}
               priority
             />
