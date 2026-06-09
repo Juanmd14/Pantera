@@ -4,9 +4,9 @@
   left: 0;
   right: 0;
   z-index: 50;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 18px var(--pad-x);
   height: var(--nav-h);
   background: linear-gradient(180deg, rgba(11, 12, 14, 0.85), rgba(11, 12, 14, 0));
@@ -14,23 +14,15 @@
   -webkit-backdrop-filter: blur(6px);
 }
 
-.left {
-  display: inline-flex;
-  align-items: center;
-  justify-self: start;
-}
-
 .brandLink {
   display: inline-flex;
   align-items: center;
-  justify-self: center;
   text-decoration: none;
 }
 
 .right {
   display: inline-flex;
   align-items: center;
-  justify-self: end;
   gap: 6px;
 }
 
@@ -61,16 +53,28 @@
 
 .searchBtn {
   color: var(--amber);
+  width: auto;
+  padding: 0 12px;
+  display: inline-flex;
+  gap: 8px;
+}
+
+.searchLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 @media (hover: hover) {
   .searchBtn:hover {
     color: var(--amber-glow);
-    transform: scale(1.08);
+    transform: scale(1.04);
   }
 }
 
-.searchBtn:active { transform: scale(0.92); }
+.searchBtn:active { transform: scale(0.94); }
 
 /* ── Botón Bolsa (con imagen pantera-cart) ───────────────── */
 
@@ -83,10 +87,6 @@
   width: 32px;
   height: 32px;
   object-fit: contain;
-  /* El PNG viene con fondo negro: `screen` deja pasar solo los píxeles
-     claros (la pantera + carrito amarillos), así el fondo negro se
-     vuelve transparente sobre la nav. */
-  mix-blend-mode: screen;
   transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
               filter 280ms ease;
 }
@@ -230,6 +230,8 @@
   .right { gap: 2px; }
   .bagBtn { width: 44px; height: 44px; }
   .bagIcon { width: 28px; height: 28px; }
+  .searchBtn { width: 44px; padding: 0; }
+  .searchLabel { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

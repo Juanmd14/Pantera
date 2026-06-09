@@ -48,19 +48,6 @@ export default function Nav() {
   return (
     <>
       <nav className={styles.nav}>
-        <div className={styles.left}>
-          <button
-            type="button"
-            className={styles.iconBtn}
-            aria-label="Abrir menú"
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen(true)}
-          >
-            <HamburgerIcon size={20} />
-          </button>
-        </div>
-
         <Link href="/" className={styles.brandLink} aria-label="Pantera — inicio">
           <BrandMark size="nav" />
         </Link>
@@ -76,6 +63,7 @@ export default function Nav() {
             }}
           >
             <PawIcon size={22} />
+            <span className={styles.searchLabel}>Buscar</span>
           </button>
 
           <button
@@ -97,6 +85,17 @@ export default function Nav() {
               priority
             />
             {count > 0 && <span className={styles.bagCount}>{count}</span>}
+          </button>
+
+          <button
+            type="button"
+            className={styles.iconBtn}
+            aria-label="Abrir menú"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen(true)}
+          >
+            <HamburgerIcon size={20} />
           </button>
         </div>
       </nav>
