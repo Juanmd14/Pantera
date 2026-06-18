@@ -1,0 +1,70 @@
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { signOutAction } from "./_actions";
+import styles from "./admin.module.css";
+
+export const metadata = {
+  title: "Admin — Pantera",
+  robots: { index: false, follow: false },
+};
+
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/admin/login");
+
+  const { data: allowed } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!allowed) {
+    await supabase.auth.signOut();
+    redirect("/admin/login?error=not_admin");
+  }
+
+  return (
+    <div className={styles.shell}>
+      <aside className={styles.sidebar}>
+        <div className={styles.brand}>
+          <span className={styles.brandWord}>PANTERA</span>
+          <span className={`mono ${styles.brandTag}`}>· ADMIN</span>
+        </div>
+
+        <nav className={styles.nav}>
+          <Link href="/admin" className={styles.navLink}>
+            Catálogo
+          </Link>
+          <Link href="/admin/productos/nuevo" className={styles.navLink}>
+            Nuevo producto
+          </Link>
+          <Link href="/admin/colecciones/nueva" className={styles.navLink}>
+            Nueva colección
+          </Link>
+          <Link href="/" className={styles.navLink}>
+            Ver sitio
+          </Link>
+        </nav>
+
+        <div className={styles.userBlock}>{user.email}</div>
+
+        <form action={signOutAction}>
+          <button type="submit" className={styles.signOut}>
+            Cerrar sesión
+          </button>
+        </form>
+      </aside>
+
+      <main className={styles.main}>{children}</main>
+    </div>
+  );
+}

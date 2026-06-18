@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import EditorialRow from "../../components/EditorialRow";
 import {
-  collections,
+  getCollections,
   getCollection,
   getProductsByCollection,
 } from "@/lib/products";
@@ -10,7 +10,10 @@ import styles from "../coleccion.module.css";
 
 type Params = { slug: string };
 
-export function generateStaticParams() {
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const collections = await getCollections();
   return collections.map((c) => ({ slug: c.slug }));
 }
 
@@ -20,7 +23,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const collection = getCollection(slug);
+  const collection = await getCollection(slug);
   if (!collection) return { title: "Pantera" };
   return {
     title: `Colección ${collection.name} — Pantera`,
@@ -34,10 +37,10 @@ export default async function ColeccionPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const collection = getCollection(slug);
+  const collection = await getCollection(slug);
   if (!collection) notFound();
 
-  const pieces = getProductsByCollection(slug);
+  const pieces = await getProductsByCollection(slug);
 
   return (
     <>

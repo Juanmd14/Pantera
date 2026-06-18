@@ -1,0 +1,699 @@
+/* Admin Pantera — paleta carbón + ámbar, letras grandes, limpio */
+
+.shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100dvh;
+  background: var(--ink);
+  color: var(--fg);
+}
+
+@media (min-width: 960px) {
+  .shell {
+    grid-template-columns: 260px 1fr;
+  }
+}
+
+.sidebar {
+  border-bottom: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+  padding: 18px 22px;
+  background: var(--carbon);
+}
+
+@media (min-width: 960px) {
+  .sidebar {
+    border-right: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+    border-bottom: none;
+    padding: 28px 22px;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.brandWord {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 22px;
+}
+
+.brandTag {
+  color: var(--fg-mute);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navLink {
+  display: block;
+  padding: 14px 14px;
+  color: var(--fg-dim);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.navLink:hover {
+  color: var(--fg);
+  background: color-mix(in oklab, var(--fg) 4%, transparent);
+}
+
+.navLink.active {
+  color: var(--ink);
+  background: var(--accent);
+}
+
+.signOut {
+  margin-top: 22px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  color: var(--fg-dim);
+  padding: 12px 14px;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.signOut:hover {
+  color: var(--fg);
+  border-color: var(--accent);
+}
+
+.userBlock {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+  color: var(--fg-mute);
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  word-break: break-all;
+}
+
+.main {
+  padding: 28px 22px 80px;
+  max-width: 1080px;
+}
+
+@media (min-width: 960px) {
+  .main {
+    padding: 42px 48px 80px;
+  }
+}
+
+.pageHead {
+  margin-bottom: 28px;
+}
+
+.kicker {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 0.95;
+  margin: 6px 0 0;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  margin-top: 10px;
+  color: var(--fg-dim);
+  font-size: 16px;
+  max-width: 560px;
+}
+
+/* ── Forms ──────────────────────────────────────────────────── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.fieldset {
+  border: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+  padding: 24px;
+  background: var(--carbon);
+}
+
+.fieldsetTitle {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 18px;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 720px) {
+  .fieldRow.two {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  background: var(--ink);
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  color: var(--fg);
+  padding: 16px 16px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 140ms ease;
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  border-color: var(--accent);
+}
+
+.hint {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fg-mute);
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.checkbox {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent);
+  background: var(--ink);
+  cursor: pointer;
+  position: relative;
+  border-radius: 2px;
+}
+
+.checkbox:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkbox:checked::after {
+  content: "";
+  position: absolute;
+  inset: 4px 8px;
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  transform: rotate(45deg);
+}
+
+.checkboxLabel {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 16px 28px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.btn.solid {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.btn.solid:hover {
+  background: color-mix(in oklab, var(--accent) 85%, white);
+}
+
+.btn.danger {
+  border-color: color-mix(in oklab, #ff5b5b 60%, var(--accent));
+  color: color-mix(in oklab, #ff7676 70%, var(--accent));
+}
+
+.btn.danger:hover {
+  background: #b13a3a;
+  border-color: #b13a3a;
+  color: #fff;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.linkBtn {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 4px;
+  text-decoration: none;
+}
+
+.linkBtn:hover {
+  text-decoration: underline;
+}
+
+/* ── Cards (dashboard) ──────────────────────────────────────── */
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+@media (min-width: 720px) {
+  .cardsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--carbon);
+  border: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+
+.card:hover {
+  border-color: var(--accent);
+}
+
+.cardImg {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--ink);
+  position: relative;
+}
+
+.cardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: 20px;
+}
+
+.cardName {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.cardDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  align-self: center;
+}
+
+.cardDot.off {
+  background: var(--fg-mute);
+}
+
+.cardEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 2px dashed color-mix(in oklab, var(--fg) 14%, transparent);
+  color: var(--fg-dim);
+  text-decoration: none;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.cardEmpty:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Productos table-like ───────────────────────────────────── */
+
+.productRow {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--carbon);
+  border: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 8px;
+  transition: border-color 140ms ease;
+}
+
+.productRow:hover {
+  border-color: var(--accent);
+}
+
+.productThumb {
+  width: 64px;
+  height: 80px;
+  object-fit: cover;
+  background: var(--ink);
+}
+
+.productMain {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.productName {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.productSub {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fg-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.productPrice {
+  font-family: "Space Mono", ui-monospace, monospace;
+  color: var(--accent);
+  font-size: 16px;
+}
+
+/* ── Sizes editor grid ──────────────────────────────────────── */
+
+.sizesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.sizeBox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  background: var(--ink);
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  border-radius: 2px;
+}
+
+.sizeBox.empty {
+  border-color: color-mix(in oklab, #b13a3a 50%, transparent);
+}
+
+.sizeLbl {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.sizeName {
+  background: transparent;
+  border: none;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--fg);
+  border-bottom: 1px solid color-mix(in oklab, var(--fg) 10%, transparent);
+  padding: 2px 0;
+  outline: none;
+}
+
+.sizeName:focus-visible {
+  border-color: var(--accent);
+}
+
+.sizeStockRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sizeStock {
+  flex: 1;
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  color: var(--fg);
+  padding: 6px 8px;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 16px;
+  width: 100%;
+}
+
+.sizeRemove {
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  color: var(--fg-dim);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-family: "Space Mono", ui-monospace, monospace;
+}
+
+.sizeRemove:hover {
+  color: #ff7676;
+  border-color: #b13a3a;
+}
+
+/* ── Image upload ───────────────────────────────────────────── */
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.uploadPreview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  max-width: 340px;
+  background: var(--ink);
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  overflow: hidden;
+}
+
+.uploadPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uploadPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  text-align: center;
+  padding: 24px;
+}
+
+.uploadInput {
+  display: none;
+}
+
+.uploadLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 14px 22px;
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+
+.uploadLabel:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.uploadStatus {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--fg-dim);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.uploadStatus.error {
+  color: #ff7676;
+}
+
+/* ── Flash / errors ─────────────────────────────────────────── */
+
+.flash {
+  padding: 14px 18px;
+  background: color-mix(in oklab, #b13a3a 18%, var(--carbon));
+  border: 1px solid color-mix(in oklab, #b13a3a 40%, transparent);
+  color: #ffcaca;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flash.ok {
+  background: color-mix(in oklab, var(--accent) 14%, var(--carbon));
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Login ──────────────────────────────────────────────────── */
+
+.loginShell {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink);
+  padding: 32px 22px;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--carbon);
+  border: 1px solid color-mix(in oklab, var(--fg) 8.5%, transparent);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}

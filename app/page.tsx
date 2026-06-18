@@ -5,7 +5,7 @@ import InstagramIcon from "./components/InstagramIcon";
 import Placeholder from "./components/Placeholder";
 import Reveal from "./components/Reveal";
 import WhatsappIcon from "./components/WhatsappIcon";
-import { collections, getProductsByCollection } from "@/lib/products";
+import { getCollections, getProductsByCollection } from "@/lib/products";
 import {
   INSTAGRAM_HANDLE,
   INSTAGRAM_URL,
@@ -14,7 +14,14 @@ import {
 } from "@/lib/config";
 import styles from "./home.module.css";
 
-export default function HomePage() {
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const collections = await getCollections();
+  const piecesByCollection = await Promise.all(
+    collections.map((c) => getProductsByCollection(c.slug)),
+  );
+
   return (
     <>
       {/* Hero */}
@@ -48,8 +55,8 @@ export default function HomePage() {
           </div>
 
           <div className={styles.collectionsGrid}>
-            {collections.map((collection) => {
-              const pieces = getProductsByCollection(collection.slug);
+            {collections.map((collection, i) => {
+              const pieces = piecesByCollection[i] ?? [];
               return (
                 <Link
                   key={collection.slug}

@@ -15,6 +15,7 @@ export type Product = {
   collection: string;
   image?: string;
   sizes: ProductSize[];
+  isPublished?: boolean;
 };
 
 export type Collection = {
@@ -22,4 +23,6 @@ export type Collection = {
   name: string;
   tagline: string;
   image: string;
+  isPublished?: boolean;
+  sortOrder?: number;
 };

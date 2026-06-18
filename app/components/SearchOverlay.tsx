@@ -3,7 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice, visibleProducts } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
+import { createClient } from "@/lib/supabase/client";
+import type { Product } from "@/lib/types";
 import styles from "./SearchOverlay.module.css";
 
 type Props = {
@@ -11,9 +13,46 @@ type Props = {
   onClose: () => void;
 };
 
+type SearchableProduct = Pick<
+  Product,
+  "slug" | "look" | "name" | "shortName" | "description" | "material" | "price" | "image"
+>;
+
 export default function SearchOverlay({ open, onClose }: Props) {
   const [query, setQuery] = useState("");
+  const [catalog, setCatalog] = useState<SearchableProduct[] | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  // Cargar catálogo la primera vez que se abre.
+  useEffect(() => {
+    if (!open || catalog) return;
+    const supabase = createClient();
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("products")
+        .select("slug, look, name, short_name, description, material, price, image_url")
+        .eq("is_published", true)
+        .not("image_url", "is", null)
+        .order("sort_order", { ascending: true });
+      if (cancelled) return;
+      setCatalog(
+        (data ?? []).map((p) => ({
+          slug: p.slug,
+          look: p.look,
+          name: p.name,
+          shortName: p.short_name,
+          description: p.description,
+          material: p.material,
+          price: p.price,
+          image: p.image_url ?? undefined,
+        })),
+      );
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, catalog]);
 
   // Auto-focus + reset al abrir/cerrar
   useEffect(() => {
@@ -42,13 +81,14 @@ export default function SearchOverlay({ open, onClose }: Props) {
   }, [open, onClose]);
 
   const results = useMemo(() => {
+    const list = catalog ?? [];
     const q = query.trim().toLowerCase();
-    if (!q) return visibleProducts;
-    return visibleProducts.filter((p) => {
+    if (!q) return list;
+    return list.filter((p) => {
       const hay = `${p.name} ${p.material} ${p.description} ${p.shortName}`.toLowerCase();
       return hay.includes(q);
     });
-  }, [query]);
+  }, [query, catalog]);
 
   const hasQuery = query.trim().length > 0;
   const empty = hasQuery && results.length === 0;

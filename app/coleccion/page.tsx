@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Placeholder from "../components/Placeholder";
 import Reveal from "../components/Reveal";
-import { collections, getProductsByCollection } from "@/lib/products";
+import { getCollections, getProductsByCollection } from "@/lib/products";
 import styles from "./coleccion.module.css";
 
 export const metadata = {
@@ -9,7 +9,14 @@ export const metadata = {
   description: "Las colecciones de Pantera. Elegancia oscura en movimiento.",
 };
 
-export default function ColeccionesPage() {
+export const revalidate = 60;
+
+export default async function ColeccionesPage() {
+  const collections = await getCollections();
+  const piecesByCollection = await Promise.all(
+    collections.map((c) => getProductsByCollection(c.slug)),
+  );
+
   return (
     <>
       <section className={styles.head}>
@@ -25,8 +32,8 @@ export default function ColeccionesPage() {
       <div className="hr" />
 
       <section className={styles.grid}>
-        {collections.map((collection) => {
-          const pieces = getProductsByCollection(collection.slug);
+        {collections.map((collection, i) => {
+          const pieces = piecesByCollection[i] ?? [];
           return (
             <Reveal key={collection.slug}>
               <Link

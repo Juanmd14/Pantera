@@ -8,19 +8,27 @@ import {
   getCollection,
   getProduct,
   getRelated,
-  visibleProducts,
 } from "@/lib/products";
+import { createClient } from "@/lib/supabase/server";
 import styles from "./producto.module.css";
 
 type Params = { slug: string };
 
-export function generateStaticParams() {
-  return visibleProducts.map((p) => ({ slug: p.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("slug")
+    .eq("is_published", true)
+    .not("image_url", "is", null);
+  return (data ?? []).map((p) => ({ slug: p.slug as string }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) return { title: "Pantera" };
   return {
     title: `${product.name} · Pantera`,
@@ -34,10 +42,13 @@ export default async function ProductoPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
-  const related = getRelated(slug);
+  const [related, productCollection] = await Promise.all([
+    getRelated(slug),
+    getCollection(product.collection),
+  ]);
   const shortLines = product.shortName.split("\n");
 
   return (
@@ -60,7 +71,7 @@ export default async function ProductoPage({
         {/* Columna derecha: info + chips + CTA + acordeón */}
         <div className={styles.right}>
           <div className="lbl">
-            Look {product.look} — {getCollection(product.collection)?.name ?? ""}
+            Look {product.look} — {productCollection?.name ?? ""}
           </div>
           <h1 className={`display ${styles.title}`}>
             {shortLines.map((line, i) => (
