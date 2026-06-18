@@ -10,7 +10,8 @@ export default function NuevaColeccionPage() {
         <div className={styles.kicker}>Catálogo · Nueva</div>
         <h1 className={styles.title}>Crear colección</h1>
         <p className={styles.subtitle}>
-          Definí nombre, slug, tagline y portada. Después agregás las piezas.
+          Cargá el nombre, una descripción breve y la foto de portada. Después
+          le agregás los productos.
         </p>
       </header>
 

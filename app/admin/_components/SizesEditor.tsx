@@ -38,6 +38,11 @@ export default function SizesEditor({ sizes, onChange }: Props) {
 
   return (
     <div>
+      <p className={styles.hint} style={{ marginBottom: 14 }}>
+        Atajos para cargar talles rápido. Después podés editar el stock de cada
+        uno o eliminar los que no usás.
+      </p>
+
       <div
         style={{
           display: "flex",
@@ -51,27 +56,28 @@ export default function SizesEditor({ sizes, onChange }: Props) {
           className={styles.linkBtn}
           onClick={() => loadPreset("ropa")}
         >
-          Cargar XS–XL
+          Cargar talles XS–XL
         </button>
         <button
           type="button"
           className={styles.linkBtn}
           onClick={() => loadPreset("botas")}
         >
-          Cargar 36–41
+          Cargar talles 36–41
         </button>
         <button
           type="button"
           className={styles.linkBtn}
           onClick={markAllSoldOut}
         >
-          Marcar todo sin stock
+          Poner todo sin stock
         </button>
       </div>
 
       {sizes.length === 0 ? (
         <p className={styles.hint}>
-          Sin talles. Agregá uno o cargá un preset arriba.
+          Todavía no hay talles cargados. Usá un atajo de arriba o el botón
+          &quot;+ Agregar talle&quot; de abajo.
         </p>
       ) : (
         <div className={styles.sizesGrid}>

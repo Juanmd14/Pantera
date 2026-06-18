@@ -145,26 +145,49 @@ export default function ProductForm({ initial, collections }: Props) {
         </div>
       ) : null}
 
+      {initial.id ? (
+        <div className={styles.dangerBar}>
+          <div>
+            <div className={styles.dangerTitle}>Eliminar producto</div>
+            <div className={styles.dangerHint}>
+              Borra este producto del sitio. No se puede deshacer.
+            </div>
+          </div>
+          <button
+            type="button"
+            className={styles.dangerBtn}
+            onClick={onDelete}
+            disabled={pending}
+          >
+            Eliminar producto
+          </button>
+        </div>
+      ) : null}
+
       <fieldset className={styles.fieldset}>
-        <div className={styles.fieldsetTitle}>Datos</div>
+        <div className={styles.fieldsetTitle}>Datos del producto</div>
 
         <div className={`${styles.fieldRow} ${styles.two}`}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="name">
-              Nombre
+              Nombre del producto
             </label>
             <input
               id="name"
               className={styles.input}
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
+              placeholder="Ej: Vestido Eclipse"
               required
             />
+            <span className={styles.hint}>
+              Es como aparece en el catálogo y en la lista de productos.
+            </span>
           </div>
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="slug">
-              Slug (URL)
+              Dirección web (slug)
             </label>
             <input
               id="slug"
@@ -175,8 +198,8 @@ export default function ProductForm({ initial, collections }: Props) {
               required
             />
             <span className={styles.hint}>
-              /producto/<b>{slug || "..."}</b>
-              {!initial.id && slugAutoTrack ? " · se autocompleta" : ""}
+              Lo que va al final del link: /producto/<b>{slug || "..."}</b>
+              {!initial.id && slugAutoTrack ? " · se completa solo desde el nombre" : ""}
             </span>
           </div>
         </div>
@@ -184,7 +207,7 @@ export default function ProductForm({ initial, collections }: Props) {
         <div className={`${styles.fieldRow} ${styles.two}`} style={{ marginTop: 18 }}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="shortName">
-              Nombre corto (con saltos de línea)
+              Nombre destacado
             </label>
             <textarea
               id="shortName"
@@ -195,21 +218,27 @@ export default function ProductForm({ initial, collections }: Props) {
               placeholder={"Vestido\nEclipse"}
             />
             <span className={styles.hint}>
-              Se muestra en grande en la página del producto, con saltos de
-              línea reales.
+              El que se muestra en grande en la página del producto. Apretá Enter
+              para hacer un salto de línea (cada línea aparece debajo de la
+              anterior).
             </span>
           </div>
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="look">
-              Look (ej: 01)
+              Número de Look
             </label>
             <input
               id="look"
               className={styles.input}
               value={look}
               onChange={(e) => setLook(e.target.value)}
+              placeholder="01"
             />
+            <span className={styles.hint}>
+              Número de la prenda dentro de la colección (ej: 01, 02, 03). Solo
+              decora — no afecta el orden.
+            </span>
           </div>
         </div>
 
@@ -224,7 +253,11 @@ export default function ProductForm({ initial, collections }: Props) {
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Contá brevemente la prenda: forma, caída, cuándo usarla…"
             />
+            <span className={styles.hint}>
+              Aparece debajo del nombre en la página del producto.
+            </span>
           </div>
         </div>
 
@@ -240,11 +273,15 @@ export default function ProductForm({ initial, collections }: Props) {
               onChange={(e) => setMaterial(e.target.value)}
               placeholder="MERINO / SHADOW"
             />
+            <span className={styles.hint}>
+              Texto cortito con el tipo de tela. Se ve en mayúsculas debajo de la
+              descripción.
+            </span>
           </div>
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="imageLabel">
-              Etiqueta de imagen
+              Texto sobre la foto
             </label>
             <input
               id="imageLabel"
@@ -253,13 +290,17 @@ export default function ProductForm({ initial, collections }: Props) {
               onChange={(e) => setImageLabel(e.target.value)}
               placeholder="LOOK 01 · 4:5"
             />
+            <span className={styles.hint}>
+              Cartelito chico que aparece encima de la foto mientras carga. Si
+              no sabés qué poner, dejalo igual al Look.
+            </span>
           </div>
         </div>
 
         <div className={`${styles.fieldRow} ${styles.two}`} style={{ marginTop: 18 }}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="price">
-              Precio (ARS)
+              Precio (en pesos)
             </label>
             <input
               id="price"
@@ -271,11 +312,14 @@ export default function ProductForm({ initial, collections }: Props) {
               onChange={(e) => setPrice(Number(e.target.value))}
               required
             />
+            <span className={styles.hint}>
+              Solo el número, sin puntos ni signos. Ej: 85000.
+            </span>
           </div>
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="collectionId">
-              Colección
+              Colección a la que pertenece
             </label>
             <select
               id="collectionId"
@@ -293,13 +337,16 @@ export default function ProductForm({ initial, collections }: Props) {
                 </option>
               ))}
             </select>
+            <span className={styles.hint}>
+              El producto va a aparecer dentro de esta colección en el sitio.
+            </span>
           </div>
         </div>
 
         <div className={`${styles.fieldRow} ${styles.two}`} style={{ marginTop: 18 }}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sortOrder">
-              Orden
+              Posición en la página
             </label>
             <input
               id="sortOrder"
@@ -308,10 +355,13 @@ export default function ProductForm({ initial, collections }: Props) {
               value={sortOrder}
               onChange={(e) => setSortOrder(Number(e.target.value))}
             />
+            <span className={styles.hint}>
+              Menor número = aparece primero dentro de la colección.
+            </span>
           </div>
 
           <div className={`${styles.field} ${styles.toggleRow}`}>
-            <span className={styles.label}>Visibilidad</span>
+            <span className={styles.label}>Visibilidad en el sitio</span>
             <label className={styles.toggleLabel} htmlFor="isPublished">
               <input
                 id="isPublished"
@@ -324,15 +374,18 @@ export default function ProductForm({ initial, collections }: Props) {
                 <span className={styles.toggleThumb} />
               </span>
               <span className={styles.toggleText}>
-                {isPublished ? "Visible en el sitio" : "Oculto (borrador)"}
+                {isPublished ? "Publicado — lo ven los clientes" : "Oculto — solo vos lo ves"}
               </span>
             </label>
+            <span className={styles.hint}>
+              Tocá para alternar entre publicado y oculto.
+            </span>
           </div>
         </div>
       </fieldset>
 
       <fieldset className={styles.fieldset}>
-        <div className={styles.fieldsetTitle}>Imagen del producto</div>
+        <div className={styles.fieldsetTitle}>Foto del producto</div>
         <ImageUpload
           kind="products"
           value={imageUrl}
@@ -341,7 +394,7 @@ export default function ProductForm({ initial, collections }: Props) {
       </fieldset>
 
       <fieldset className={styles.fieldset}>
-        <div className={styles.fieldsetTitle}>Talles y stock</div>
+        <div className={styles.fieldsetTitle}>Talles y stock disponible</div>
         <SizesEditor sizes={sizes} onChange={setSizes} />
       </fieldset>
 
@@ -355,24 +408,14 @@ export default function ProductForm({ initial, collections }: Props) {
         </button>
 
         {initial.id ? (
-          <>
-            <button
-              type="button"
-              className={styles.btn}
-              onClick={onMarkSoldOut}
-              disabled={pending}
-            >
-              Marcar sin stock
-            </button>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.danger}`}
-              onClick={onDelete}
-              disabled={pending}
-            >
-              Eliminar
-            </button>
-          </>
+          <button
+            type="button"
+            className={styles.btn}
+            onClick={onMarkSoldOut}
+            disabled={pending}
+          >
+            Marcar todo sin stock
+          </button>
         ) : null}
       </div>
     </form>

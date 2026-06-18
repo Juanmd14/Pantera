@@ -33,7 +33,8 @@ export default async function NuevoProductoPage({
         <div className={styles.kicker}>Catálogo · Nuevo</div>
         <h1 className={styles.title}>Crear producto</h1>
         <p className={styles.subtitle}>
-          Datos, imagen y talles. Guardás y queda disponible al instante.
+          Cargá los datos, subí la foto y agregá los talles con su stock. Cuando
+          guardás, queda disponible en el sitio al instante.
         </p>
       </header>
 

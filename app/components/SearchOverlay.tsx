@@ -21,7 +21,19 @@ type SearchableProduct = Pick<
 export default function SearchOverlay({ open, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [catalog, setCatalog] = useState<SearchableProduct[] | null>(null);
+  const [isNarrow, setIsNarrow] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  // El placeholder largo se corta en mobile, así que usamos uno simple cuando
+  // el viewport es angosto.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 520px)");
+    const sync = () => setIsNarrow(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // Cargar catálogo la primera vez que se abre.
   useEffect(() => {
@@ -106,7 +118,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
           ref={inputRef}
           type="search"
           className={styles.input}
-          placeholder="Buscar prendas, materiales, looks…"
+          placeholder={isNarrow ? "Buscar…" : "Buscar prendas, materiales, looks…"}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoComplete="off"

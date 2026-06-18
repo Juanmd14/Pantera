@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     turbopackUseSystemTlsCerts: true,
+    // Server Actions tienen un límite por defecto de 1 MB. Subimos a 6 MB
+    // para que matchee el tope real de uploadImage (5 MB) con margen.
+    serverActions: {
+      bodySizeLimit: "6mb",
+    },
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

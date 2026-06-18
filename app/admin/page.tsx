@@ -34,7 +34,7 @@ export default async function AdminDashboardPage() {
         <div className={styles.kicker}>Catálogo</div>
         <h1 className={styles.title}>Colecciones</h1>
         <p className={styles.subtitle}>
-          Cada colección agrupa las piezas. Tocá una para editarla o agregar productos.
+          Cada colección agrupa los productos. Tocá una para editarla o agregar productos.
         </p>
       </header>
 
@@ -70,7 +70,7 @@ export default async function AdminDashboardPage() {
                   <span>{c.slug}</span>
                   <span>·</span>
                   <span>
-                    {count} {count === 1 ? "pieza" : "piezas"}
+                    {count} {count === 1 ? "producto" : "productos"}
                   </span>
                   <span>·</span>
                   <span

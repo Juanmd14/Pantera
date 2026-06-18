@@ -37,8 +37,8 @@
 
 .desc {
   color: var(--fg-dim);
-  font-size: 16px;
-  max-width: 34ch;
+  font-size: 18px;
+  max-width: 36ch;
   line-height: 1.55;
 }
 
@@ -49,9 +49,10 @@
 }
 
 .price {
-  font-size: 17px;
-  margin-top: 10px;
-  letter-spacing: 0.1em;
+  font-size: 22px;
+  margin-top: 12px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 @media (max-width: 900px) {
@@ -72,7 +73,8 @@
 
 @media (max-width: 767px) {
   .title { font-size: clamp(34px, 9vw, 40px); margin: 12px 0 14px; }
-  .desc { font-size: 15px; }
+  .desc { font-size: 17px; }
+  .price { font-size: 20px; }
   .image { height: 420px !important; }
   .row,
   .rowRight {

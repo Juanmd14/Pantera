@@ -107,6 +107,25 @@ export default function CollectionForm({ initial }: Props) {
         </div>
       ) : null}
 
+      {initial.id ? (
+        <div className={styles.dangerBar}>
+          <div>
+            <div className={styles.dangerTitle}>Eliminar colección</div>
+            <div className={styles.dangerHint}>
+              Borra la colección y todos sus productos. No se puede deshacer.
+            </div>
+          </div>
+          <button
+            type="button"
+            className={styles.dangerBtn}
+            onClick={onDelete}
+            disabled={pending}
+          >
+            Eliminar colección
+          </button>
+        </div>
+      ) : null}
+
       <fieldset className={styles.fieldset}>
         <div className={styles.fieldsetTitle}>Datos</div>
 
@@ -146,7 +165,7 @@ export default function CollectionForm({ initial }: Props) {
         <div className={styles.fieldRow} style={{ marginTop: 18 }}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="tagline">
-              Tagline
+              Descripción breve
             </label>
             <input
               id="tagline"
@@ -161,7 +180,7 @@ export default function CollectionForm({ initial }: Props) {
         <div className={`${styles.fieldRow} ${styles.two}`} style={{ marginTop: 18 }}>
           <div className={styles.field}>
             <label className={styles.label} htmlFor="sortOrder">
-              Orden
+              Posición en la página
             </label>
             <input
               id="sortOrder"
@@ -174,8 +193,13 @@ export default function CollectionForm({ initial }: Props) {
           </div>
 
           <div className={`${styles.field} ${styles.toggleRow}`}>
-            <span className={styles.label}>Visibilidad</span>
-            <label className={styles.toggleLabel} htmlFor="isPublished">
+            <span className={styles.label}>Visibilidad en el sitio</span>
+            <label
+              className={`${styles.toggleLabel} ${
+                isPublished ? styles.toggleOn : styles.toggleOff
+              }`}
+              htmlFor="isPublished"
+            >
               <input
                 id="isPublished"
                 type="checkbox"
@@ -187,9 +211,12 @@ export default function CollectionForm({ initial }: Props) {
                 <span className={styles.toggleThumb} />
               </span>
               <span className={styles.toggleText}>
-                {isPublished ? "Visible en el sitio" : "Oculta (borrador)"}
+                {isPublished ? "Publicada — la ven los clientes" : "Oculta — solo vos la ves"}
               </span>
             </label>
+            <span className={styles.hint}>
+              Tocá para alternar entre publicada y oculta.
+            </span>
           </div>
         </div>
       </fieldset>
@@ -211,17 +238,6 @@ export default function CollectionForm({ initial }: Props) {
         >
           {pending ? "Guardando…" : initial.id ? "Guardar cambios" : "Crear colección"}
         </button>
-
-        {initial.id ? (
-          <button
-            type="button"
-            className={`${styles.btn} ${styles.danger}`}
-            onClick={onDelete}
-            disabled={pending}
-          >
-            Eliminar
-          </button>
-        ) : null}
       </div>
     </form>
   );

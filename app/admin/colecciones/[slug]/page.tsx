@@ -68,7 +68,7 @@ export default async function EditarColeccionPage({
         <h1 className={styles.title}>{collection.name}</h1>
         <p className={styles.subtitle}>
           /coleccion/{collection.slug} · {products.length}{" "}
-          {products.length === 1 ? "pieza" : "piezas"}
+          {products.length === 1 ? "producto" : "productos"}
         </p>
       </header>
 
@@ -91,21 +91,23 @@ export default async function EditarColeccionPage({
             alignItems: "baseline",
             justifyContent: "space-between",
             marginBottom: 18,
+            gap: 16,
+            flexWrap: "wrap",
           }}
         >
-          <h2 className={styles.title} style={{ fontSize: 32 }}>
-            Piezas
-          </h2>
+          <h2 className={styles.sectionTitle}>Productos de la colección</h2>
           <Link
             href={`/admin/productos/nuevo?coleccion=${collection.slug}`}
-            className={styles.btn}
+            className={`${styles.btn} ${styles.solid}`}
           >
             + Nuevo producto
           </Link>
         </div>
 
         {products.length === 0 ? (
-          <p className={styles.hint}>Todavía no hay piezas en esta colección.</p>
+          <p className={styles.hint}>
+            Todavía no hay productos en esta colección.
+          </p>
         ) : (
           <div>
             {products.map((p) => (
