@@ -801,9 +801,9 @@
 }
 
 .flash.ok {
-  background: color-mix(in oklab, var(--accent) 14%, var(--carbon));
-  border-color: var(--accent);
-  color: var(--accent);
+  background: color-mix(in oklab, #2fbf6f 16%, var(--carbon));
+  border-color: #2fbf6f;
+  color: #b9f3cf;
 }
 
 /* ── Danger bar (top of edit form) ──────────────────────────── */
