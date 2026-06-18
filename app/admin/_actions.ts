@@ -33,6 +33,20 @@ function mapDbError(error: { code?: string; message: string }) {
   return error.message;
 }
 
+// El form HTML ya tiene pattern="[a-z0-9-]+" pero el server también valida
+// para que nadie pueda saltearse invocando la action directo.
+const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
+
+// Allowlists para uploadImage. Sin esto, un admin (o cuenta comprometida)
+// podría subir SVG con <script>, HTML, o cualquier binario al bucket.
+const ALLOWED_EXT = new Set(["jpg", "jpeg", "png", "webp", "avif"]);
+const ALLOWED_MIME = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+]);
+
 // Las redirecciones post-login solo pueden quedarse dentro del sitio.
 function safeNext(next: string) {
   if (
@@ -108,6 +122,13 @@ export async function saveCollection(input: SaveCollectionInput) {
     sort_order: input.sortOrder,
   };
 
+  if (!SLUG_RE.test(payload.slug)) {
+    return {
+      ok: false as const,
+      error: "Slug inválido. Solo a-z, 0-9 y guiones.",
+    };
+  }
+
   if (input.id) {
     const { error } = await supabase
       .from("collections")
@@ -174,6 +195,13 @@ export async function saveProduct(input: SaveProductInput) {
     is_published: input.isPublished,
     sort_order: input.sortOrder,
   };
+
+  if (!SLUG_RE.test(payload.slug)) {
+    return {
+      ok: false as const,
+      error: "Slug inválido. Solo a-z, 0-9 y guiones.",
+    };
+  }
 
   let productId = input.id;
 
@@ -285,7 +313,14 @@ export async function uploadImage(
     return { ok: false as const, error: "Máximo 5 MB" };
   }
 
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+  if (!ALLOWED_EXT.has(ext) || !ALLOWED_MIME.has(file.type)) {
+    return {
+      ok: false as const,
+      error: "Solo JPG, PNG, WebP o AVIF.",
+    };
+  }
+
   const path = `${kind}/${crypto.randomUUID()}.${ext}`;
 
   const { error: upErr } = await supabase.storage
