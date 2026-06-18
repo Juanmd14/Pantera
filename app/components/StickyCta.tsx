@@ -2,20 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatPrice } from "@/lib/products";
-import { useCart } from "@/lib/cart";
+import { useCart, type CartProductRef } from "@/lib/cart";
 import styles from "./StickyCta.module.css";
 
 type Props = {
-  price: number;
-  slug: string;
+  product: CartProductRef;
   size?: string;
   disabled?: boolean;
   label?: string;
 };
 
 export default function StickyCta({
-  price,
-  slug,
+  product,
   size,
   disabled = false,
   label = "Añadir a la bolsa",
@@ -44,7 +42,7 @@ export default function StickyCta({
         className={`${styles.bar} ${stuck ? styles.barShow : ""}`}
         aria-hidden={!stuck}
       >
-        <div className={`price ${styles.price}`}>{formatPrice(price)}</div>
+        <div className={`price ${styles.price}`}>{formatPrice(product.price)}</div>
         <button
           type="button"
           className={`btn solid ${styles.cta}`}
@@ -52,7 +50,7 @@ export default function StickyCta({
           aria-disabled={isDisabled}
           onClick={() => {
             if (isDisabled) return;
-            add(slug, { size });
+            add(product, { size });
           }}
         >
           {!size && !disabled ? "Elegí un talle" : label}

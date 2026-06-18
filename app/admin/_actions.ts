@@ -5,13 +5,54 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 // ─────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────
+
+// Devuelve el cliente Supabase solo si el usuario está en admin_users.
+// Las RLS policies ya cubren los CRUD de tablas, pero validar acá además
+// protege el Storage y da mejores mensajes de error.
+async function getAdminClient() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  return data ? supabase : null;
+}
+
+// 23505 = unique_violation en Postgres. Traducimos a mensaje humano.
+function mapDbError(error: { code?: string; message: string }) {
+  if (error.code === "23505") return "Ese slug ya existe. Elegí otro.";
+  return error.message;
+}
+
+// Las redirecciones post-login solo pueden quedarse dentro del sitio.
+function safeNext(next: string) {
+  if (
+    next.startsWith("/") &&
+    !next.startsWith("//") &&
+    !next.startsWith("/\\")
+  ) {
+    return next;
+  }
+  return "/admin";
+}
+
+// ─────────────────────────────────────────────────────────────────
 // AUTH
 // ─────────────────────────────────────────────────────────────────
 
 export async function loginAction(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const next = String(formData.get("next") ?? "/admin");
+  const next = safeNext(String(formData.get("next") ?? "/admin"));
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -55,7 +96,8 @@ export type SaveCollectionInput = {
 };
 
 export async function saveCollection(input: SaveCollectionInput) {
-  const supabase = await createClient();
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
 
   const payload = {
     slug: input.slug.trim().toLowerCase(),
@@ -71,10 +113,10 @@ export async function saveCollection(input: SaveCollectionInput) {
       .from("collections")
       .update(payload)
       .eq("id", input.id);
-    if (error) return { ok: false as const, error: error.message };
+    if (error) return { ok: false as const, error: mapDbError(error) };
   } else {
     const { error } = await supabase.from("collections").insert(payload);
-    if (error) return { ok: false as const, error: error.message };
+    if (error) return { ok: false as const, error: mapDbError(error) };
   }
 
   revalidateAll();
@@ -82,9 +124,11 @@ export async function saveCollection(input: SaveCollectionInput) {
 }
 
 export async function deleteCollection(id: string) {
-  const supabase = await createClient();
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
+
   const { error } = await supabase.from("collections").delete().eq("id", id);
-  if (error) return { ok: false as const, error: error.message };
+  if (error) return { ok: false as const, error: mapDbError(error) };
   revalidateAll();
   return { ok: true as const };
 }
@@ -113,7 +157,8 @@ export type SaveProductInput = {
 };
 
 export async function saveProduct(input: SaveProductInput) {
-  const supabase = await createClient();
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
 
   const payload = {
     slug: input.slug.trim().toLowerCase(),
@@ -137,7 +182,7 @@ export async function saveProduct(input: SaveProductInput) {
       .from("products")
       .update(payload)
       .eq("id", productId);
-    if (error) return { ok: false as const, error: error.message };
+    if (error) return { ok: false as const, error: mapDbError(error) };
   } else {
     const { data, error } = await supabase
       .from("products")
@@ -145,7 +190,10 @@ export async function saveProduct(input: SaveProductInput) {
       .select("id")
       .single();
     if (error || !data) {
-      return { ok: false as const, error: error?.message ?? "insert failed" };
+      return {
+        ok: false as const,
+        error: error ? mapDbError(error) : "No se pudo crear",
+      };
     }
     productId = data.id as string;
   }
@@ -155,7 +203,7 @@ export async function saveProduct(input: SaveProductInput) {
     .from("product_sizes")
     .delete()
     .eq("product_id", productId);
-  if (delErr) return { ok: false as const, error: delErr.message };
+  if (delErr) return { ok: false as const, error: mapDbError(delErr) };
 
   if (input.sizes.length > 0) {
     const rows = input.sizes
@@ -167,8 +215,10 @@ export async function saveProduct(input: SaveProductInput) {
         sort_order: i,
       }));
     if (rows.length > 0) {
-      const { error: insErr } = await supabase.from("product_sizes").insert(rows);
-      if (insErr) return { ok: false as const, error: insErr.message };
+      const { error: insErr } = await supabase
+        .from("product_sizes")
+        .insert(rows);
+      if (insErr) return { ok: false as const, error: mapDbError(insErr) };
     }
   }
 
@@ -177,20 +227,24 @@ export async function saveProduct(input: SaveProductInput) {
 }
 
 export async function deleteProduct(id: string) {
-  const supabase = await createClient();
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
+
   const { error } = await supabase.from("products").delete().eq("id", id);
-  if (error) return { ok: false as const, error: error.message };
+  if (error) return { ok: false as const, error: mapDbError(error) };
   revalidateAll();
   return { ok: true as const };
 }
 
 export async function markProductSoldOut(productId: string) {
-  const supabase = await createClient();
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
+
   const { error } = await supabase
     .from("product_sizes")
     .update({ stock: 0 })
     .eq("product_id", productId);
-  if (error) return { ok: false as const, error: error.message };
+  if (error) return { ok: false as const, error: mapDbError(error) };
   revalidateAll();
   return { ok: true as const };
 }
@@ -200,12 +254,14 @@ export async function togglePublished(
   id: string,
   next: boolean,
 ) {
-  const supabase = await createClient();
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
+
   const { error } = await supabase
     .from(table)
     .update({ is_published: next })
     .eq("id", id);
-  if (error) return { ok: false as const, error: error.message };
+  if (error) return { ok: false as const, error: mapDbError(error) };
   revalidateAll();
   return { ok: true as const };
 }
@@ -218,6 +274,9 @@ export async function uploadImage(
   formData: FormData,
   kind: "collections" | "products",
 ) {
+  const supabase = await getAdminClient();
+  if (!supabase) return { ok: false as const, error: "No autorizado" };
+
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return { ok: false as const, error: "Archivo inválido" };
@@ -229,7 +288,6 @@ export async function uploadImage(
   const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
   const path = `${kind}/${crypto.randomUUID()}.${ext}`;
 
-  const supabase = await createClient();
   const { error: upErr } = await supabase.storage
     .from("catalog")
     .upload(path, file, {

@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import type { ProductSize } from "@/lib/types";
+import type { CartProductRef } from "@/lib/cart";
 import SizeChips from "./SizeChips";
 import AddToBag from "./AddToBag";
 import StickyCta from "./StickyCta";
 
 type Props = {
-  slug: string;
-  price: number;
+  product: CartProductRef;
   sizes: ProductSize[];
   sizeLblClassName?: string;
   chipsWrapClassName?: string;
@@ -16,8 +16,7 @@ type Props = {
 };
 
 export default function BuyPanel({
-  slug,
-  price,
+  product,
   sizes,
   sizeLblClassName,
   chipsWrapClassName,
@@ -36,15 +35,14 @@ export default function BuyPanel({
       </div>
 
       <AddToBag
-        slug={slug}
+        product={product}
         size={size ?? undefined}
         disabled={!size || allSoldOut}
         className={ctaClassName}
       />
 
       <StickyCta
-        price={price}
-        slug={slug}
+        product={product}
         size={size ?? undefined}
         disabled={!size || allSoldOut}
       />

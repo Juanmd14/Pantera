@@ -8,20 +8,20 @@ import {
   useMemo,
   useState,
 } from "react";
-import { formatPrice, getProduct } from "./products";
+import { formatPrice } from "./products";
 
-type CartItem = { slug: string; size?: string; qty: number };
-
-export type CartLine = {
-  id: string;
+// Referencia mínima al producto que el carrito necesita guardar.
+// Pasamos esto al agregar y queda persistido en localStorage como snapshot.
+export type CartProductRef = {
   slug: string;
-  size?: string;
-  qty: number;
   name: string;
   price: number;
   image?: string;
-  lineTotal: number;
 };
+
+type CartItem = CartProductRef & { size?: string; qty: number };
+
+export type CartLine = CartItem & { id: string; lineTotal: number };
 
 type CartContextValue = {
   items: CartItem[];
@@ -30,7 +30,7 @@ type CartContextValue = {
   total: number;
   open: boolean;
   setOpen: (open: boolean) => void;
-  add: (slug: string, opts?: { size?: string; qty?: number }) => void;
+  add: (product: CartProductRef, opts?: { size?: string; qty?: number }) => void;
   remove: (id: string) => void;
   setQty: (id: string, qty: number) => void;
   clear: () => void;
@@ -40,6 +40,19 @@ const STORAGE_KEY = "pantera_cart";
 
 // Identidad de línea: una misma prenda en distintos talles son líneas distintas.
 const lineId = (slug: string, size?: string) => `${slug}__${size ?? ""}`;
+
+// Un item válido tiene los campos del snapshot completos.
+function isValidItem(it: unknown): it is CartItem {
+  if (!it || typeof it !== "object") return false;
+  const r = it as Record<string, unknown>;
+  return (
+    typeof r.slug === "string" &&
+    typeof r.name === "string" &&
+    typeof r.price === "number" &&
+    typeof r.qty === "number" &&
+    r.qty > 0
+  );
+}
 
 const CartContext = createContext<CartContextValue | null>(null);
 
@@ -53,11 +66,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as CartItem[];
+        const parsed: unknown = JSON.parse(raw);
         if (Array.isArray(parsed)) {
-          // Hidratación inicial desde localStorage (sistema externo).
           // eslint-disable-next-line react-hooks/set-state-in-effect
-          setItems(parsed.filter((it) => it && getProduct(it.slug) && it.qty > 0));
+          setItems(parsed.filter(isValidItem));
         }
       }
     } catch {
@@ -77,24 +89,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items, hydrated]);
 
   const add = useCallback(
-    (slug: string, opts?: { size?: string; qty?: number }) => {
-      if (!getProduct(slug)) return;
+    (product: CartProductRef, opts?: { size?: string; qty?: number }) => {
       const size = opts?.size;
       const qty = opts?.qty ?? 1;
       setItems((prev) => {
-        const found = prev.find((it) => it.slug === slug && it.size === size);
-        if (found) {
-          return prev.map((it) =>
-            it.slug === slug && it.size === size
-              ? { ...it, qty: it.qty + qty }
-              : it
-          );
+        const idx = prev.findIndex(
+          (it) => it.slug === product.slug && it.size === size,
+        );
+        if (idx >= 0) {
+          // Si el producto ya estaba, sumamos cantidad y refrescamos el
+          // snapshot por si el precio/imagen cambiaron desde la última vez.
+          const next = prev.slice();
+          next[idx] = {
+            ...next[idx]!,
+            ...product,
+            size,
+            qty: next[idx]!.qty + qty,
+          };
+          return next;
         }
-        return [...prev, { slug, size, qty }];
+        return [...prev, { ...product, size, qty }];
       });
       setOpen(true);
     },
-    []
+    [],
   );
 
   const remove = useCallback((id: string) => {
@@ -106,36 +124,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       qty <= 0
         ? prev.filter((it) => lineId(it.slug, it.size) !== id)
         : prev.map((it) =>
-            lineId(it.slug, it.size) === id ? { ...it, qty } : it
-          )
+            lineId(it.slug, it.size) === id ? { ...it, qty } : it,
+          ),
     );
   }, []);
 
   const clear = useCallback(() => setItems([]), []);
 
-  const lines = useMemo<CartLine[]>(() => {
-    return items.flatMap((it) => {
-      const product = getProduct(it.slug);
-      if (!product) return [];
-      return [
-        {
-          id: lineId(it.slug, it.size),
-          slug: it.slug,
-          size: it.size,
-          qty: it.qty,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          lineTotal: product.price * it.qty,
-        },
-      ];
-    });
-  }, [items]);
+  const lines = useMemo<CartLine[]>(
+    () =>
+      items.map((it) => ({
+        ...it,
+        id: lineId(it.slug, it.size),
+        lineTotal: it.price * it.qty,
+      })),
+    [items],
+  );
 
   const count = useMemo(() => items.reduce((n, it) => n + it.qty, 0), [items]);
   const total = useMemo(
     () => lines.reduce((sum, l) => sum + l.lineTotal, 0),
-    [lines]
+    [lines],
   );
 
   const value = useMemo<CartContextValue>(
@@ -151,7 +160,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setQty,
       clear,
     }),
-    [items, lines, count, total, open, add, remove, setQty, clear]
+    [items, lines, count, total, open, add, remove, setQty, clear],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
@@ -169,7 +178,7 @@ export function useCart(): CartContextValue {
 export function buildWhatsappMessage(
   lines: CartLine[],
   total: number,
-  customer?: { name?: string; zone?: string }
+  customer?: { name?: string; zone?: string },
 ): string {
   const name = customer?.name?.trim();
   const zone = customer?.zone?.trim();

@@ -86,8 +86,12 @@ export default async function ProductoPage({
           <div className={`price ${styles.price}`}>{formatPrice(product.price)}</div>
 
           <BuyPanel
-            slug={product.slug}
-            price={product.price}
+            product={{
+              slug: product.slug,
+              name: product.name,
+              price: product.price,
+              image: product.image,
+            }}
             sizes={product.sizes}
             sizeLblClassName={styles.sizeLbl}
             chipsWrapClassName={styles.chipsWrap}

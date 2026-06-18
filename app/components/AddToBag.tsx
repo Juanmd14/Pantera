@@ -1,9 +1,9 @@
 "use client";
 
-import { useCart } from "@/lib/cart";
+import { useCart, type CartProductRef } from "@/lib/cart";
 
 type Props = {
-  slug: string;
+  product: CartProductRef;
   size?: string;
   disabled?: boolean;
   className?: string;
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function AddToBag({
-  slug,
+  product,
   size,
   disabled = false,
   className,
@@ -27,7 +27,7 @@ export default function AddToBag({
       aria-disabled={isDisabled}
       onClick={() => {
         if (isDisabled) return;
-        add(slug, { size });
+        add(product, { size });
       }}
     >
       {!size && !disabled ? "Elegí un talle" : label}
