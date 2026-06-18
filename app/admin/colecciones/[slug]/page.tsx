@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import CollectionForm from "../../_components/CollectionForm";
-import { formatPrice } from "@/lib/products";
+import { formatPrice } from "@/lib/format";
 import styles from "../../admin.module.css";
 
 export const dynamic = "force-dynamic";

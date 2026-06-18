@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { formatPrice } from "./products";
+import { formatPrice } from "./format";
 
 // Referencia mínima al producto que el carrito necesita guardar.
 // Pasamos esto al agregar y queda persistido en localStorage como snapshot.

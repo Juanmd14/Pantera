@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { buildWhatsappMessage, useCart } from "@/lib/cart";
-import { formatPrice } from "@/lib/products";
+import { formatPrice } from "@/lib/format";
 import { whatsappUrl } from "@/lib/config";
 import WhatsappIcon from "./WhatsappIcon";
 import styles from "./CartDrawer.module.css";

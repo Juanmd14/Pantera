@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { createClient } from "./supabase/server";
+import { createPublicClient } from "./supabase/server";
 import type { Collection, Product, ProductSize } from "./types";
 
 // ── Row shapes (snake_case) ─────────────────────────────────────
@@ -72,7 +72,7 @@ function mapProduct(row: ProductRow): Product {
 
 // `cache` deduplica las queries dentro de un mismo render (server).
 export const getCollections = cache(async (): Promise<Collection[]> => {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("collections")
     .select("id, slug, name, tagline, image_url, is_published, sort_order")
@@ -83,7 +83,7 @@ export const getCollections = cache(async (): Promise<Collection[]> => {
 
 export const getCollection = cache(
   async (slug: string): Promise<Collection | undefined> => {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("collections")
       .select("id, slug, name, tagline, image_url, is_published, sort_order")
@@ -103,7 +103,7 @@ const PRODUCT_SELECT = `
 
 export const getProductsByCollection = cache(
   async (slug: string): Promise<Product[]> => {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("products")
       .select(PRODUCT_SELECT)
@@ -120,7 +120,7 @@ export const getProductsByCollection = cache(
 
 export const getProduct = cache(
   async (slug: string): Promise<Product | undefined> => {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data, error } = await supabase
       .from("products")
       .select(PRODUCT_SELECT)
@@ -141,17 +141,6 @@ export const getRelated = cache(async (slug: string): Promise<Product[]> => {
   return siblings.filter((p) => p.slug !== slug);
 });
 
-// ── Helpers puros ───────────────────────────────────────────────
-
-export function formatPrice(value: number): string {
-  return `$${value.toLocaleString("es-AR")}`;
-}
-
-export function isSoldOut(product: Product): boolean {
-  return product.sizes.every((s) => s.stock <= 0);
-}
-
-export function isSizeAvailable(product: Product, sizeLabel: string): boolean {
-  const s = product.sizes.find((s) => s.label === sizeLabel);
-  return Boolean(s && s.stock > 0);
-}
+// Los helpers puros (formatPrice, isSoldOut, isSizeAvailable) viven en
+// `lib/format.ts` para que los client components no arrastren este módulo
+// server-only al bundle del browser.

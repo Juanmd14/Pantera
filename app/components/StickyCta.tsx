@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { formatPrice } from "@/lib/products";
+import { formatPrice } from "@/lib/format";
 import { useCart, type CartProductRef } from "@/lib/cart";
 import styles from "./StickyCta.module.css";
 

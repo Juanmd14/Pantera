@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Placeholder from "./Placeholder";
 import Reveal from "./Reveal";
-import { formatPrice } from "@/lib/products";
+import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/types";
 import styles from "./EditorialRow.module.css";
 

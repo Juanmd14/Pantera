@@ -3,13 +3,9 @@ import { notFound } from "next/navigation";
 import Placeholder from "../../components/Placeholder";
 import Accordion from "../../components/Accordion";
 import BuyPanel from "../../components/BuyPanel";
-import {
-  formatPrice,
-  getCollection,
-  getProduct,
-  getRelated,
-} from "@/lib/products";
-import { createClient } from "@/lib/supabase/server";
+import { getCollection, getProduct, getRelated } from "@/lib/products";
+import { formatPrice } from "@/lib/format";
+import { createPublicClient } from "@/lib/supabase/server";
 import styles from "./producto.module.css";
 
 type Params = { slug: string };
@@ -17,7 +13,7 @@ type Params = { slug: string };
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from("products")
     .select("slug")
