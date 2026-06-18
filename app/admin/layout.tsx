@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOutAction } from "./_actions";
@@ -14,6 +15,14 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = (await headers()).get("x-pathname") ?? "";
+
+  // En /admin/login no chequeamos auth ni mostramos el shell:
+  // si lo hiciéramos, un usuario no logueado entra en loop de redirect.
+  if (pathname.startsWith("/admin/login")) {
+    return <>{children}</>;
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
