@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+import DeleteCollectionButton from "./_components/DeleteCollectionButton";
 import styles from "./admin.module.css";
 
 export const dynamic = "force-dynamic";
@@ -50,6 +51,9 @@ export default async function AdminDashboardPage() {
               href={`/admin/colecciones/${c.slug}`}
               className={styles.card}
             >
+              <div className={styles.cardActions}>
+                <DeleteCollectionButton id={c.id} name={c.name} />
+              </div>
               <div className={styles.cardImg}>
                 {c.image_url ? (
                   <Image

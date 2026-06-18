@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, Space_Mono } from "next/font/google";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import HideOnAdmin from "./components/HideOnAdmin";
 import { CartProvider } from "@/lib/cart";
 import "./globals.css";
 
@@ -47,9 +48,13 @@ export default function RootLayout({
     <html lang="es-AR">
       <body className={`${archivo.variable} ${spaceMono.variable}`}>
         <CartProvider>
-          <Nav />
+          <HideOnAdmin>
+            <Nav />
+          </HideOnAdmin>
           <main>{children}</main>
-          <Footer />
+          <HideOnAdmin>
+            <Footer />
+          </HideOnAdmin>
         </CartProvider>
       </body>
     </html>

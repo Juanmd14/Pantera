@@ -7,6 +7,7 @@ import {
   markProductSoldOut,
   saveProduct,
 } from "../_actions";
+import { slugify } from "@/lib/format";
 import ImageUpload from "./ImageUpload";
 import SizesEditor, { type SizeRow } from "./SizesEditor";
 import styles from "../admin.module.css";
@@ -44,6 +45,19 @@ export default function ProductForm({ initial, collections }: Props) {
   const [collectionId, setCollectionId] = useState(initial.collectionId);
   const [look, setLook] = useState(initial.look);
   const [name, setName] = useState(initial.name);
+  // En creación, el slug se autocompleta desde el nombre hasta que el user
+  // lo edita manualmente. En edición no tocamos el slug existente.
+  const [slugAutoTrack, setSlugAutoTrack] = useState(!initial.id);
+
+  function onNameChange(value: string) {
+    setName(value);
+    if (slugAutoTrack) setSlug(slugify(value));
+  }
+
+  function onSlugChange(value: string) {
+    setSlug(value.toLowerCase().replace(/[^a-z0-9-]/g, "-"));
+    setSlugAutoTrack(false);
+  }
   const [shortName, setShortName] = useState(initial.shortName);
   const [description, setDescription] = useState(initial.description);
   const [material, setMaterial] = useState(initial.material);
@@ -78,7 +92,12 @@ export default function ProductForm({ initial, collections }: Props) {
         setFlash({ kind: "err", msg: res.error });
         return;
       }
-      setFlash({ kind: "ok", msg: "Guardado" });
+      setFlash({
+        kind: "ok",
+        msg: res.renamed
+          ? `Guardado como /producto/${res.slug}`
+          : "Guardado",
+      });
       if (!initial.id) {
         router.push(`/admin/productos/${res.slug}`);
       } else if (res.slug !== initial.slug) {
@@ -138,7 +157,7 @@ export default function ProductForm({ initial, collections }: Props) {
               id="name"
               className={styles.input}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => onNameChange(e.target.value)}
               required
             />
           </div>
@@ -151,12 +170,14 @@ export default function ProductForm({ initial, collections }: Props) {
               id="slug"
               className={styles.input}
               value={slug}
-              onChange={(e) =>
-                setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
-              }
+              onChange={(e) => onSlugChange(e.target.value)}
               pattern="[a-z0-9-]+"
               required
             />
+            <span className={styles.hint}>
+              /producto/<b>{slug || "..."}</b>
+              {!initial.id && slugAutoTrack ? " · se autocompleta" : ""}
+            </span>
           </div>
         </div>
 
@@ -289,16 +310,21 @@ export default function ProductForm({ initial, collections }: Props) {
             />
           </div>
 
-          <div className={`${styles.field} ${styles.checkboxRow}`}>
-            <input
-              id="isPublished"
-              type="checkbox"
-              className={styles.checkbox}
-              checked={isPublished}
-              onChange={(e) => setIsPublished(e.target.checked)}
-            />
-            <label htmlFor="isPublished" className={styles.checkboxLabel}>
-              Publicado
+          <div className={`${styles.field} ${styles.toggleRow}`}>
+            <label className={styles.toggleLabel} htmlFor="isPublished">
+              <input
+                id="isPublished"
+                type="checkbox"
+                className={styles.toggleInput}
+                checked={isPublished}
+                onChange={(e) => setIsPublished(e.target.checked)}
+              />
+              <span className={styles.toggleTrack}>
+                <span className={styles.toggleThumb} />
+              </span>
+              <span className={styles.toggleText}>
+                {isPublished ? "Visible en el sitio" : "Oculto (borrador)"}
+              </span>
             </label>
           </div>
         </div>

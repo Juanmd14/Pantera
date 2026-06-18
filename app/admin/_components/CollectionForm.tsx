@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { deleteCollection, saveCollection } from "../_actions";
+import { slugify } from "@/lib/format";
 import ImageUpload from "./ImageUpload";
 import styles from "../admin.module.css";
 
@@ -31,6 +32,19 @@ export default function CollectionForm({ initial }: Props) {
   const [imageUrl, setImageUrl] = useState<string | null>(initial.imageUrl);
   const [isPublished, setIsPublished] = useState(initial.isPublished);
   const [sortOrder, setSortOrder] = useState(initial.sortOrder);
+  // En creación, el slug se autocompleta desde el nombre hasta que el user
+  // lo edita manualmente. En edición no tocamos el slug existente.
+  const [slugAutoTrack, setSlugAutoTrack] = useState(!initial.id);
+
+  function onNameChange(value: string) {
+    setName(value);
+    if (slugAutoTrack) setSlug(slugify(value));
+  }
+
+  function onSlugChange(value: string) {
+    setSlug(value.toLowerCase().replace(/[^a-z0-9-]/g, "-"));
+    setSlugAutoTrack(false);
+  }
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -49,7 +63,12 @@ export default function CollectionForm({ initial }: Props) {
         setFlash({ kind: "err", msg: res.error });
         return;
       }
-      setFlash({ kind: "ok", msg: "Guardado" });
+      setFlash({
+        kind: "ok",
+        msg: res.renamed
+          ? `Guardado como /coleccion/${res.slug}`
+          : "Guardado",
+      });
       if (!initial.id) {
         router.push(`/admin/colecciones/${res.slug}`);
       } else if (res.slug !== initial.slug) {
@@ -100,7 +119,7 @@ export default function CollectionForm({ initial }: Props) {
               id="name"
               className={styles.input}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => onNameChange(e.target.value)}
               required
             />
           </div>
@@ -113,14 +132,13 @@ export default function CollectionForm({ initial }: Props) {
               id="slug"
               className={styles.input}
               value={slug}
-              onChange={(e) =>
-                setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
-              }
+              onChange={(e) => onSlugChange(e.target.value)}
               pattern="[a-z0-9-]+"
               required
             />
             <span className={styles.hint}>
               Aparece como /coleccion/<b>{slug || "..."}</b>
+              {!initial.id && slugAutoTrack ? " · se autocompleta" : ""}
             </span>
           </div>
         </div>
@@ -155,16 +173,21 @@ export default function CollectionForm({ initial }: Props) {
             <span className={styles.hint}>Menor número = aparece primero</span>
           </div>
 
-          <div className={`${styles.field} ${styles.checkboxRow}`}>
-            <input
-              id="isPublished"
-              type="checkbox"
-              className={styles.checkbox}
-              checked={isPublished}
-              onChange={(e) => setIsPublished(e.target.checked)}
-            />
-            <label htmlFor="isPublished" className={styles.checkboxLabel}>
-              Publicada
+          <div className={`${styles.field} ${styles.toggleRow}`}>
+            <label className={styles.toggleLabel} htmlFor="isPublished">
+              <input
+                id="isPublished"
+                type="checkbox"
+                className={styles.toggleInput}
+                checked={isPublished}
+                onChange={(e) => setIsPublished(e.target.checked)}
+              />
+              <span className={styles.toggleTrack}>
+                <span className={styles.toggleThumb} />
+              </span>
+              <span className={styles.toggleText}>
+                {isPublished ? "Visible en el sitio" : "Oculta (borrador)"}
+              </span>
             </label>
           </div>
         </div>

@@ -129,6 +129,9 @@ export async function saveCollection(input: SaveCollectionInput) {
     };
   }
 
+  let finalSlug = payload.slug;
+  let renamed = false;
+
   if (input.id) {
     const { error } = await supabase
       .from("collections")
@@ -136,12 +139,33 @@ export async function saveCollection(input: SaveCollectionInput) {
       .eq("id", input.id);
     if (error) return { ok: false as const, error: mapDbError(error) };
   } else {
-    const { error } = await supabase.from("collections").insert(payload);
-    if (error) return { ok: false as const, error: mapDbError(error) };
+    // Auto-dedupe slug en INSERT: si choca, probamos con -2, -3, ... hasta 20.
+    let inserted = false;
+    for (let i = 1; i <= 20; i++) {
+      const candidate = i === 1 ? payload.slug : `${payload.slug}-${i}`;
+      const { error } = await supabase
+        .from("collections")
+        .insert({ ...payload, slug: candidate });
+      if (!error) {
+        finalSlug = candidate;
+        renamed = i > 1;
+        inserted = true;
+        break;
+      }
+      if (error.code !== "23505") {
+        return { ok: false as const, error: mapDbError(error) };
+      }
+    }
+    if (!inserted) {
+      return {
+        ok: false as const,
+        error: "Demasiadas colecciones con nombre similar. Probá otro.",
+      };
+    }
   }
 
   revalidateAll();
-  return { ok: true as const, slug: payload.slug };
+  return { ok: true as const, slug: finalSlug, renamed };
 }
 
 export async function deleteCollection(id: string) {
@@ -204,6 +228,8 @@ export async function saveProduct(input: SaveProductInput) {
   }
 
   let productId = input.id;
+  let finalSlug = payload.slug;
+  let renamed = false;
 
   if (productId) {
     const { error } = await supabase
@@ -212,18 +238,32 @@ export async function saveProduct(input: SaveProductInput) {
       .eq("id", productId);
     if (error) return { ok: false as const, error: mapDbError(error) };
   } else {
-    const { data, error } = await supabase
-      .from("products")
-      .insert(payload)
-      .select("id")
-      .single();
-    if (error || !data) {
+    // Auto-dedupe slug en INSERT: probamos con -2, -3, ... hasta 20.
+    let inserted: { id: string } | null = null;
+    for (let i = 1; i <= 20; i++) {
+      const candidate = i === 1 ? payload.slug : `${payload.slug}-${i}`;
+      const { data, error } = await supabase
+        .from("products")
+        .insert({ ...payload, slug: candidate })
+        .select("id")
+        .single();
+      if (!error && data) {
+        finalSlug = candidate;
+        renamed = i > 1;
+        inserted = data as { id: string };
+        break;
+      }
+      if (error && error.code !== "23505") {
+        return { ok: false as const, error: mapDbError(error) };
+      }
+    }
+    if (!inserted) {
       return {
         ok: false as const,
-        error: error ? mapDbError(error) : "No se pudo crear",
+        error: "Demasiados productos con nombre similar. Probá otro.",
       };
     }
-    productId = data.id as string;
+    productId = inserted.id;
   }
 
   // Sincronizar talles: reemplazo total (simple y correcto para volúmenes chicos).
@@ -251,7 +291,7 @@ export async function saveProduct(input: SaveProductInput) {
   }
 
   revalidateAll();
-  return { ok: true as const, slug: payload.slug };
+  return { ok: true as const, slug: finalSlug, renamed };
 }
 
 export async function deleteProduct(id: string) {

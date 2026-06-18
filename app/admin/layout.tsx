@@ -53,14 +53,13 @@ export default async function AdminLayout({
           <Link href="/admin" className={styles.navLink}>
             Catálogo
           </Link>
-          <Link href="/admin/productos/nuevo" className={styles.navLink}>
-            Nuevo producto
-          </Link>
-          <Link href="/admin/colecciones/nueva" className={styles.navLink}>
-            Nueva colección
-          </Link>
-          <Link href="/" className={styles.navLink}>
-            Ver sitio
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.navLink}
+          >
+            Ver sitio ↗
           </Link>
         </nav>
 
