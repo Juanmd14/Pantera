@@ -133,7 +133,7 @@ export default function CollectionForm({ initial }: Props) {
               className={styles.input}
               value={slug}
               onChange={(e) => onSlugChange(e.target.value)}
-              pattern="[a-z0-9-]+"
+              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
               required
             />
             <span className={styles.hint}>
@@ -174,6 +174,7 @@ export default function CollectionForm({ initial }: Props) {
           </div>
 
           <div className={`${styles.field} ${styles.toggleRow}`}>
+            <span className={styles.label}>Visibilidad</span>
             <label className={styles.toggleLabel} htmlFor="isPublished">
               <input
                 id="isPublished"

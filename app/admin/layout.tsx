@@ -53,6 +53,9 @@ export default async function AdminLayout({
           <Link href="/admin" className={styles.navLink}>
             Catálogo
           </Link>
+          <Link href="/admin/productos/nuevo" className={styles.navLink}>
+            Nuevo producto
+          </Link>
           <Link
             href="/"
             target="_blank"
