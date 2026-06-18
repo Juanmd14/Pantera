@@ -63,7 +63,6 @@ export default function Nav() {
             }}
           >
             <PawIcon size={22} />
-            <span className={styles.searchLabel}>Buscar</span>
           </button>
 
           <button

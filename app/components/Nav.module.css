@@ -51,30 +51,7 @@
 
 /* ── Botón Pata (Buscar) ────────────────────────────────── */
 
-.searchBtn {
-  color: var(--amber);
-  width: auto;
-  padding: 0 12px;
-  display: inline-flex;
-  gap: 8px;
-}
-
-.searchLabel {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-@media (hover: hover) {
-  .searchBtn:hover {
-    color: var(--amber-glow);
-    transform: scale(1.04);
-  }
-}
-
-.searchBtn:active { transform: scale(0.94); }
+.searchBtn { color: var(--amber); }
 
 /* ── Botón Bolsa (con imagen pantera-cart) ───────────────── */
 
@@ -230,8 +207,6 @@
   .right { gap: 2px; }
   .bagBtn { width: 44px; height: 44px; }
   .bagIcon { width: 28px; height: 28px; }
-  .searchBtn { padding: 0 10px; }
-  .searchLabel { font-size: 10px; letter-spacing: 0.18em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
