@@ -3,15 +3,9 @@
 /**
  * useTrackingEyes — la firma de marca de Pantera.
  *
- * Coreografía de entrada (el animal se presenta):
- *   0–1000 ms : ojos fijos al centro, calma absoluta.
- *   1000 ms   : blink corto — la primera mirada.
- *   1330 ms   : entrecerrar mantenido (~720 ms con hold).
- *   2060 ms   : segundo blink.
- *   2400 ms   : ciclo normal de blinks variados.
- *
- * Durante 1000–3500 ms los ojos merodean ignorando el cursor (intro window).
- * Después: tracking del cursor + prowl idle + blink variado.
+ * Sin coreografía de entrada: el animal ya está despierto. Desde el primer
+ * frame los ojos merodean (prowl) y pestañean en su ritmo natural. Cuando hay
+ * actividad del cursor lo siguen; al quedar quieto vuelven a deambular.
  *
  * Los blinks viajan por keyframes CSS asimétricos (cierre rápido, apertura
  * lenta) disparados con class-toggle. El cleanup se hace en `animationend`.
@@ -56,8 +50,8 @@ function pickProwlDirection(now: number) {
   prowlTarget.nextChangeAt = now + 1600 + Math.random() * 2400;
 }
 
-const INTRO_CALM_MS = 1000;
-const INTRO_PROWL_END_MS = 3500;
+const INTRO_CALM_MS = 0;        // sin calma inicial — deambula desde t=0
+const INTRO_PROWL_END_MS = 0;   // sin ventana que ignore el cursor
 
 const BLINK_CLASSES = ["blinkSnap", "blinkSlow", "halfClose", "doubleBlink"] as const;
 type BlinkClass = (typeof BLINK_CLASSES)[number];
@@ -180,10 +174,7 @@ function scheduleBlink() {
 }
 
 function runIntro() {
-  setTimeout(() => applyBlink("blinkSnap"), INTRO_CALM_MS);          // 1000ms
-  setTimeout(() => applyBlink("halfClose"), INTRO_CALM_MS + 330);    // 1330ms
-  setTimeout(() => applyBlink("blinkSnap"), INTRO_CALM_MS + 1060);   // 2060ms
-  setTimeout(scheduleBlink, INTRO_CALM_MS + 1400);                   // 2400ms
+  scheduleBlink();   // pestañeo variado natural desde el inicio
 }
 
 function ensureLoopStarted() {

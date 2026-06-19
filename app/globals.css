@@ -180,14 +180,11 @@ input:focus-visible,
 .eye {
   position: relative;
   aspect-ratio: 1.55 / 1;
-  border-radius: 50% / 100%;
-  background: radial-gradient(ellipse at 50% 50%, #070705, #030302 72%);
-  box-shadow:
-    inset 0 0 16px 3px #000,
-    0 0 0 1px rgba(255, 255, 255, 0.03);
+  /* Sin cápsula: el iris ámbar flota directo sobre el negro de la página,
+     como si la web entera fuera la pantera. El .eye solo da tamaño, centra
+     el iris y aporta el pivote del parpadeo (scaleY). */
   display: grid;
   place-items: center;
-  overflow: hidden;
   transform-origin: 50% 50%;
 }
 
@@ -236,8 +233,12 @@ input:focus-visible,
       rgba(255, 230, 150, 0.12) 1.5deg 3deg
     ),
     radial-gradient(circle at 50% 40%, var(--amber-glow) 0%, var(--amber) 58%, var(--amber-deep) 100%);
+  /* Halo atmosférico de 3 capas: el ámbar sangra sobre el --ink de la página
+     sin borde duro — los ojos respiran en la oscuridad. */
   box-shadow:
-    0 0 30px 4px rgba(232, 170, 30, 0.40),
+    0 0 22px 3px rgba(232, 170, 30, 0.55),
+    0 0 60px 12px rgba(232, 170, 30, 0.28),
+    0 0 120px 30px rgba(232, 170, 30, 0.12),
     inset 0 -5px 14px rgba(60, 30, 0, 0.45),
     inset 0 6px 12px rgba(255, 228, 150, 0.40);
   will-change: transform;
